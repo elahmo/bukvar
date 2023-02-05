@@ -1,6 +1,11 @@
 export const WORDLE_TITLE = 'Wordle (BOS) 🇧🇦'
 
 export const WIN_MESSAGES = [
+  '5/5!',
+  'Sjedi petica!',
+  'Ko je to, šta je to, kaži, kaži?',
+  '"Ko drugom jamu kopa, riječ pogađa!" - Sokrat',
+  'Dođoh, vidjeh, pogodih! - Mehmedalija Mak Dizdar',
   'Svaka čast! 🥳',
   'Super! 🎉',
   'Odlično! 😍',
