@@ -45,7 +45,7 @@ export const WORDS = [
   'čizma',
   'kifla',
   'okvir',
-  'lotus',
+  'lotos',
   'remek',
   'porod',
   'maslo',
