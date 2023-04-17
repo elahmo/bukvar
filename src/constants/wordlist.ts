@@ -219,4 +219,11 @@ export const WORDS = [
   'gužva',
   'beton',
   'građa',
+  'afera',
+  'agent',
+  'akord',
+  'alarm',
+  'aleja',
+  'anoda',
+  'aorta',
 ]

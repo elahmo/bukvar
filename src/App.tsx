@@ -1,5 +1,6 @@
 import {
   ChartBarIcon,
+  HeartIcon,
   InformationCircleIcon,
   RefreshIcon,
   SunIcon,
@@ -29,6 +30,7 @@ import {
 } from './lib/localStorage'
 
 import './App.css'
+import { CareModal } from './components/modals/CareModal'
 
 const ALERT_TIME_MS = 4000
 
@@ -43,6 +45,7 @@ function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
+  const [isCareModalOpen, setIsCareModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(
@@ -171,20 +174,24 @@ function App() {
           {WORDLE_TITLE}
         </h1>
         <SunIcon
-          className="h-6 w-6 mr-2 cursor-pointer dark:stroke-white"
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => handleDarkMode(!isDarkMode)}
         />
         <RefreshIcon
-          className="h-6 w-6 mr-2 cursor-pointer dark:stroke-white"
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => window.location.reload()}
         />
         <InformationCircleIcon
-          className="h-6 w-6 mr-2 cursor-pointer dark:stroke-white"
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsInfoModalOpen(true)}
         />
         <ChartBarIcon
-          className="h-6 w-6 mr-3 cursor-pointer dark:stroke-white"
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsStatsModalOpen(true)}
+        />
+        <HeartIcon
+          className="h-5 w-5 mr-3 cursor-pointer fill-red-500 dark:stroke-white"
+          onClick={() => setIsCareModalOpen(true)}
         />
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} />
@@ -209,6 +216,10 @@ function App() {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
         }}
+      />
+      <CareModal
+        isOpen={isCareModalOpen}
+        handleClose={() => setIsCareModalOpen(false)}
       />
       <AboutModal
         isOpen={isAboutModalOpen}
