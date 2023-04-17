@@ -190,7 +190,7 @@ function App() {
           onClick={() => setIsStatsModalOpen(true)}
         />
         <HeartIcon
-          className="h-5 w-5 mr-3 cursor-pointer fill-red-500 dark:stroke-white"
+          className="h-5 w-5 mr-3 cursor-pointer fill-red-500 dark:stroke-white animate-bounce"
           onClick={() => setIsCareModalOpen(true)}
         />
       </div>
