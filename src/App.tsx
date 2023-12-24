@@ -75,6 +75,7 @@ function App() {
 
   const plausible = Plausible({
     domain: 'elahmo.github.io/wordle',
+    apiHost: 'https://plausible.novalic.xyz',
   })
 
   useEffect(() => {
