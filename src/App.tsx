@@ -30,7 +30,6 @@ import {
 } from './lib/localStorage'
 
 import './App.css'
-import { CareModal } from './components/modals/CareModal'
 
 const ALERT_TIME_MS = 4000
 
@@ -45,7 +44,6 @@ function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
-  const [isCareModalOpen, setIsCareModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(
@@ -189,10 +187,6 @@ function App() {
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsStatsModalOpen(true)}
         />
-        <HeartIcon
-          className="h-5 w-5 mr-3 cursor-pointer fill-red-500 dark:stroke-white animate-bounce"
-          onClick={() => setIsCareModalOpen(true)}
-        />
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} />
       <Keyboard
@@ -216,10 +210,6 @@ function App() {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
         }}
-      />
-      <CareModal
-        isOpen={isCareModalOpen}
-        handleClose={() => setIsCareModalOpen(false)}
       />
       <AboutModal
         isOpen={isAboutModalOpen}

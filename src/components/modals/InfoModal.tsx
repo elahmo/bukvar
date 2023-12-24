@@ -25,25 +25,25 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
-        <Cell value="S" />
-        <Cell value="E" />
+        <Cell value="B" />
+        <Cell value="I" />
         <Cell value="Ǉ" status="present" />
-        <Cell value="A" />
         <Cell value="K" />
+        <Cell value="A" />
       </div>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         Riječ sadrži slovo Ǉ, ali je na pogrešnom mjestu.
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
-        <Cell value="M" />
+        <Cell value="L" />
         <Cell value="O" />
-        <Cell value="T" />
-        <Cell value="K" status="absent" />
+        <Cell value="P" />
+        <Cell value="T" status="absent" />
         <Cell value="A" />
       </div>
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        Riječ ne sadrži slovo K.
+        Riječ ne sadrži slovo T.
       </p>
     </BaseModal>
   )
