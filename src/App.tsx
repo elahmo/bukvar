@@ -1,6 +1,5 @@
 import {
   ChartBarIcon,
-  HeartIcon,
   InformationCircleIcon,
   RefreshIcon,
   SunIcon,
