@@ -18,5 +18,6 @@ ReactDOM.render(
 reportWebVitals()
 const plausible = Plausible({
   domain: 'elahmo.github.io/wordle',
+  apiHost: 'https://plausible.novalic.xyz',
 })
 plausible.enableAutoPageviews()
