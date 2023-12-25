@@ -60,7 +60,7 @@ export const SuggestWordModal = ({ isOpen, handleClose }: Props) => {
           className="w-full p-2 border border-gray-300 rounded"
           pattern="[a-zA-ZčćžšđČĆŽŠĐ]+"
           minLength={5}
-          maxLength={5}
+          maxLength={7}
         />
         <button
           type="submit"
