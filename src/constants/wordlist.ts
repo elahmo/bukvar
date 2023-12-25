@@ -347,4 +347,5 @@ export const WORDS = [
   'aorta',
   'trbuh',
   'borac',
+  'lopta',
 ]
