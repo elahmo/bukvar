@@ -27,6 +27,7 @@ export const SuggestWordModal = ({ isOpen, handleClose }: Props) => {
     })
       .then((response) => {
         alert('Riječ je uspješno poslana!')
+        setWord('')
       })
       .catch((error) => {
         alert('Desio se problemčić, pokušaj kasnije!')
