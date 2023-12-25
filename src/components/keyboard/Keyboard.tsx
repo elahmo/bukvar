@@ -12,7 +12,13 @@ type Props = {
   isSuggestWordModalOpen: boolean
 }
 
-export const Keyboard = ({ onChar, onDelete, onEnter, guesses, isSuggestWordModalOpen}: Props) => {
+export const Keyboard = ({
+  onChar,
+  onDelete,
+  onEnter,
+  guesses,
+  isSuggestWordModalOpen,
+}: Props) => {
   const charStatuses = getStatuses(guesses)
 
   const onClick = (value: KeyValue) => {
@@ -28,7 +34,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses, isSuggestWordModa
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
       if (isSuggestWordModalOpen) {
-        return;
+        return
       }
       if (e.code === 'Enter') {
         onEnter()

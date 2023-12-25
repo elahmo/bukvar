@@ -47,10 +47,9 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
         Riječ ne sadrži slovo T.
       </p>
       <p className="text-sm text-gray-500 mt-2 dark:text-gray-300">
-        Ukoliko imaš prijedlog za novu riječ, klikni na ikonicu 
-        <PlusCircleIcon className="h-5 w-5dark:stroke-white inline"/> u meniju.
-        </p>
-        
+        Ukoliko imaš prijedlog za novu riječ, klikni na ikonicu
+        <PlusCircleIcon className="h-5 w-5dark:stroke-white inline" /> u meniju.
+      </p>
     </BaseModal>
   )
 }
