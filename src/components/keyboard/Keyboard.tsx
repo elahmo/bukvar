@@ -1,7 +1,7 @@
 import { KeyValue } from '../../lib/keyboard'
 import { getStatuses } from '../../lib/statuses'
 import { Key } from './Key'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ENTER_TEXT, DELETE_TEXT } from '../../constants/strings'
 
 type Props = {
@@ -9,9 +9,10 @@ type Props = {
   onDelete: () => void
   onEnter: () => void
   guesses: string[]
+  isSuggestWordModalOpen: boolean
 }
 
-export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
+export const Keyboard = ({ onChar, onDelete, onEnter, guesses, isSuggestWordModalOpen}: Props) => {
   const charStatuses = getStatuses(guesses)
 
   const onClick = (value: KeyValue) => {
@@ -26,6 +27,9 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
+      if (isSuggestWordModalOpen) {
+        return;
+      }
       if (e.code === 'Enter') {
         onEnter()
       } else if (e.code === 'Backspace') {

@@ -1,6 +1,7 @@
 import {
   ChartBarIcon,
   InformationCircleIcon,
+  PlusCircleIcon,
   RefreshIcon,
   SunIcon,
 } from '@heroicons/react/outline'
@@ -11,6 +12,7 @@ import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
 import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
+import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import {
   WORDLE_TITLE,
   WIN_MESSAGES,
@@ -43,6 +45,7 @@ function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
+  const [isSuggestWordModalOpen, setIsSuggestWordModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(
@@ -171,6 +174,10 @@ function App() {
         <h1 className="text-xl ml-2.5 grow font-bold dark:text-white">
           {WORDLE_TITLE}
         </h1>
+        <PlusCircleIcon
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white animate-bounce"
+          onClick={() => setIsSuggestWordModalOpen(true)}
+        />
         <SunIcon
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => handleDarkMode(!isDarkMode)}
@@ -194,6 +201,7 @@ function App() {
         onDelete={onDelete}
         onEnter={onEnter}
         guesses={guesses}
+        isSuggestWordModalOpen={isSuggestWordModalOpen}
       />
       <InfoModal
         isOpen={isInfoModalOpen}
@@ -210,6 +218,10 @@ function App() {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
         }}
+      />
+      <SuggestWordModal
+        isOpen={isSuggestWordModalOpen}
+        handleClose={() => setIsSuggestWordModalOpen(false)}
       />
       <AboutModal
         isOpen={isAboutModalOpen}

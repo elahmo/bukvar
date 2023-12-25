@@ -1,3 +1,4 @@
+import { PlusCircleIcon } from '@heroicons/react/outline'
 import { Cell } from '../grid/Cell'
 import { BaseModal } from './BaseModal'
 
@@ -45,6 +46,11 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
       <p className="text-sm text-gray-500 dark:text-gray-300">
         Riječ ne sadrži slovo T.
       </p>
+      <p className="text-sm text-gray-500 mt-2 dark:text-gray-300">
+        Ukoliko imaš prijedlog za novu riječ, klikni na ikonicu 
+        <PlusCircleIcon className="h-5 w-5dark:stroke-white inline"/> u meniju.
+        </p>
+        
     </BaseModal>
   )
 }

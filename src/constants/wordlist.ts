@@ -352,4 +352,5 @@ export const WORDS = [
   'avion',
   'sloga',
   'nalaz',
+  'mamac',
 ]

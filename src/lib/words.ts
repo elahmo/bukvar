@@ -8,6 +8,10 @@ export const isWordInWordList = (word: string) => {
   )
 }
 
+export const isWordPresent = (word: string) => {
+  return WORDS.includes(word.toLowerCase())
+}
+
 export const isWinningWord = (word: string) => {
   return solution === word
 }
