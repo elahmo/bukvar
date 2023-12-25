@@ -349,4 +349,6 @@ export const WORDS = [
   'borac',
   'lopta',
   'avion',
+  'sloga',
+  'nalaz',
 ]
