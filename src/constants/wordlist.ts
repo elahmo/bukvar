@@ -345,4 +345,6 @@ export const WORDS = [
   'pismo',
   'šnala',
   'aorta',
+  'trbuh',
+  'borac',
 ]
