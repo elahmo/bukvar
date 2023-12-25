@@ -338,6 +338,7 @@ export const WORDS = [
   'briga',
   'škola',
   'arena',
+  'losos',
   'taban',
   'kanta',
   'burma',
