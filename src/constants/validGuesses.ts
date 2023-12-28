@@ -37636,7 +37636,6 @@ export const VALIDGUESSES = [
   'mouse',
   'mouta',
   'moute',
-  'mouth',
   'mouza',
   'mouzo',
   'movat',
