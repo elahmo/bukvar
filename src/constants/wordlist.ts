@@ -69,7 +69,6 @@ export const WORDS = [
   'lasta',
   'tavan',
   'mašna',
-  'smiǉe',
   'kotao',
   'sokak',
   'visak',
