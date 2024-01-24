@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import App from './App'
-import { WORDLE_TITLE } from './constants/strings'
+import { GAME_TITLE } from './constants/strings'
 
 beforeEach(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -21,6 +21,6 @@ beforeEach(() => {
 
 test('renders App component', () => {
   render(<App />)
-  const linkElement = screen.getByText('Wordle (BOS) 🇧🇦')
+  const linkElement = screen.getByText('Bukvar 🇧🇦')
   expect(linkElement).toBeInTheDocument()
 })

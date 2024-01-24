@@ -1,4 +1,4 @@
-export const WORDLE_TITLE = 'Wordle (BOS) 🇧🇦'
+export const GAME_TITLE = 'Bukvar 🇧🇦'
 
 export const WIN_MESSAGES = [
   '5/5!',

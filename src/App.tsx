@@ -14,7 +14,7 @@ import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import {
-  WORDLE_TITLE,
+  GAME_TITLE,
   WIN_MESSAGES,
   GAME_COPIED_MESSAGE,
   ABOUT_GAME_MESSAGE,
@@ -77,7 +77,7 @@ function App() {
   const [stats, setStats] = useState(() => loadStats())
 
   const plausible = Plausible({
-    domain: 'elahmo.github.io/wordle',
+    domain: 'elahmo.github.io/bukvar',
     apiHost: 'https://plausible.novalic.xyz',
   })
 
@@ -172,7 +172,7 @@ function App() {
     <div className="py-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div className="flex w-80 mx-auto items-center mb-4 mt-4">
         <h1 className="text-xl ml-2.5 grow font-bold dark:text-white">
-          {WORDLE_TITLE}
+          {GAME_TITLE}
         </h1>
         <PlusCircleIcon
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white animate-bounce"
@@ -235,7 +235,7 @@ function App() {
       >
         {ABOUT_GAME_MESSAGE}
       </button>
-      <p className="text-gray-600 text-center">Wordle - Bosanski jezik</p>
+      <p className="text-gray-600 text-center">Bukvar</p>
 
       <Alert message={NOT_ENOUGH_LETTERS_MESSAGE} isOpen={isNotEnoughLetters} />
       <Alert

@@ -17,7 +17,7 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
 const plausible = Plausible({
-  domain: 'elahmo.github.io/wordle',
+  domain: 'elahmo.github.io/bukvar',
   apiHost: 'https://plausible.novalic.xyz',
 })
 plausible.enableAutoPageviews()
