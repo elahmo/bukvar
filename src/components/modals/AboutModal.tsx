@@ -17,9 +17,6 @@ export const AboutModal = ({ isOpen, handleClose }: Props) => {
           pogledaj izvorni kod ovdje
         </a>{' '}
         <br />
-        Igra se prije zvala drugačije, ali radi pravnih razloga manje izmjene su se morale desiti.
-        <br />
-        <br />
         Nova riječ svaki dan!
       </p>
     </BaseModal>

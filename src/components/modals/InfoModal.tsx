@@ -10,6 +10,12 @@ type Props = {
 export const InfoModal = ({ isOpen, handleClose }: Props) => {
   return (
     <BaseModal title="Kako igrati?" isOpen={isOpen} handleClose={handleClose}>
+      <p className="text-sm text-gray-800 dark:text-gray-800">
+        Ova igra je prije imala drugo ime, ali je radi pravnih razloga morala 
+        promijeniti ime i izgled, ali i samu adresu. Ako znate nekoga da je
+        igrao na staroj adresi, molim vas da podijelite novu adresu:<br/><br/>
+        <strong>http://elahmo.github.io/bukvar</strong><br/><br/>
+      </p>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         Pogodi riječ u 6 pokušaja. Nakon svakog pokušaja, boje na ploči će se
         promijeniti da ti pokažu koliko si blizu pravoj riječi.
