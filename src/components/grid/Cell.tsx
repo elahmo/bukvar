@@ -1,5 +1,6 @@
 import { CharStatus } from '../../lib/statuses'
 import classnames from 'classnames'
+import { useEffect, useState } from 'react'
 
 type Props = {
   value?: string
@@ -7,8 +8,18 @@ type Props = {
 }
 
 export const Cell = ({ value, status }: Props) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const classes = classnames(
-    'w-14 h-14 border-solid border-2 flex items-center justify-center mx-0.5 text-4xl font-bold rounded dark:text-white',
+    `${
+      windowWidth <= 375 ? 'w-10 h-10 text-2xl' : 'w-14 h-14 text-4xl' // 375 is the width of an iPhone 12 mini (the phone I use)
+    } border-solid border-2 flex items-center justify-center mx-0.5  font-bold rounded dark:text-white`,
     {
       'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-600':
         !status,
