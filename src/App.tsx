@@ -175,7 +175,7 @@ function App() {
           {GAME_TITLE}
         </h1>
         <PlusCircleIcon
-          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white animate-bounce"
+          className="h-5 w-5 mr-2 cursor-pointer fill-green-500 dark:stroke-white animate-ping"
           onClick={() => setIsSuggestWordModalOpen(true)}
         />
         <SunIcon

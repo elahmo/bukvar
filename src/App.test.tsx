@@ -21,6 +21,6 @@ beforeEach(() => {
 
 test('renders App component', () => {
   render(<App />)
-  const linkElement = screen.getByText('Bukvar 🇧🇦')
+  const linkElement = screen.getByText('Bukvar 🇧🇦 ⚜')
   expect(linkElement).toBeInTheDocument()
 })

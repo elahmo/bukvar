@@ -28,6 +28,10 @@ export const Key = ({
         status === 'correct',
       'bg-orange-500 hover:bg-orange-600 active:bg-orange-700 dark:bg-orange-700 text-white':
         status === 'present',
+      'bg-green-500 hover:bg-green-600 active:bg-green-700 dark:bg-green-700 text-white':
+        status === 'enter',
+      'bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-700 text-white':
+        status === 'delete',
     }
   )
 

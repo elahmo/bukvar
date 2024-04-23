@@ -46,6 +46,10 @@ export const SuggestWordModal = ({ isOpen, handleClose }: Props) => {
         pojaviće se na listi riječi uskoro.
       </p>
 
+      <p className="text-md text-left text-gray-500 dark:text-gray-300">
+        Tehnički problemi su ispravljeni, ovo opet radi!
+      </p>
+
       <form
         onSubmit={(e) => {
           e.preventDefault()
