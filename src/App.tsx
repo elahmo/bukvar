@@ -77,7 +77,7 @@ function App() {
   const [stats, setStats] = useState(() => loadStats())
 
   const plausible = Plausible({
-    domain: 'elahmo.github.io/bukvar',
+    domain: 'elahmo.github.io',
     apiHost: 'https://plausible.novalic.xyz',
   })
 
