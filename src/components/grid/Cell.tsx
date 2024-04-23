@@ -18,7 +18,7 @@ export const Cell = ({ value, status }: Props) => {
 
   const classes = classnames(
     `${
-      windowWidth <= 375 ? 'w-10 h-10 text-2xl' : 'w-14 h-14 text-4xl' // 375 is the width of an iPhone 12 mini (the phone I use)
+      windowWidth <= 375 ? 'w-10 h-10 text-2xl' : 'w-14 h-14 text-4xl'
     } border-solid border-2 flex items-center justify-center mx-0.5  font-bold rounded dark:text-white`,
     {
       'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-600':

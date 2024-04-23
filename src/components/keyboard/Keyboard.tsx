@@ -91,6 +91,9 @@ export const Keyboard = ({
         <Key value="Ć" onClick={onClick} status={charStatuses['Ć']} />
       </div>
       <div className="flex justify-center mb-1 mx-2">
+        <Key width={65.4} value="ENTER" onClick={onClick}>
+          {ENTER_TEXT}
+        </Key>
         <Key value="C" onClick={onClick} status={charStatuses['C']} />
         <Key value="V" onClick={onClick} status={charStatuses['V']} />
         <Key value="B" onClick={onClick} status={charStatuses['B']} />
@@ -100,11 +103,6 @@ export const Keyboard = ({
         <Key value="Ž" onClick={onClick} status={charStatuses['Ž']} />
         <Key width={65.4} value="DELETE" onClick={onClick}>
           {DELETE_TEXT}
-        </Key>
-      </div>
-      <div className="flex justify-center">
-        <Key width={265.4} value="ENTER" onClick={onClick}>
-          {ENTER_TEXT}
         </Key>
       </div>
     </div>
