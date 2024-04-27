@@ -13,6 +13,14 @@ export const WIN_MESSAGES = [
   'MA KO NAMA POGAĐA?!?!? 🤗',
   'DRAGI NAŠ VOKABULAR 🤗',
   'KO TO ZNA SVE RIJEČI?',
+  'Rukama se gleda, slovima se pogađa! 🤗',
+  'Igranje nije obavezno, ali nije ni kupanje!',
+  'Pozovi 99 prijatelja da igraju i dobićeš vrijednu nagradu!',
+  'Ko igra, zlo ne misli, a ne čini ni proljeće!',
+  'Slovo po slovo, riječ po riječ, Istanbul je daleko, ali nije Beč!',
+  'Podijeli rezultat sa omiljenim prijateljima na Viberu!',
+  'Podijeli rezultat sa omiljenim prijateljima na Signalu!',
+  'Bolje igraš od svih kolega, a bogme i kolegica!',
 ]
 export const GAME_COPIED_MESSAGE = 'Rezultat kopiran, podijeli sa prijateljima'
 export const ABOUT_GAME_MESSAGE = 'O igri'
