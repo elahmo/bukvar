@@ -32,7 +32,7 @@ import {
 
 import './App.css'
 
-const ALERT_TIME_MS = 4000
+const ALERT_TIME_MS = 3000
 
 function App() {
   const prefersDarkMode = window.matchMedia(
@@ -170,12 +170,12 @@ function App() {
 
   return (
     <div className="py-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div className="flex w-80 mx-auto items-center mb-4 mt-4">
+      <div className="flex w-80 mx-auto items-center mb-2 mt-2">
         <h1 className="text-xl ml-2.5 grow font-bold dark:text-white">
           {GAME_TITLE}
         </h1>
         <PlusCircleIcon
-          className="h-5 w-5 mr-2 cursor-pointer fill-green-500 dark:stroke-white animate-ping"
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsSuggestWordModalOpen(true)}
         />
         <SunIcon
@@ -230,13 +230,11 @@ function App() {
 
       <button
         type="button"
-        className="mx-auto mt-4 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none"
+        className="mx-auto mt-2 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none"
         onClick={() => setIsAboutModalOpen(true)}
       >
         {ABOUT_GAME_MESSAGE}
       </button>
-      <p className="text-gray-600 text-center">Bukvar</p>
-
       <Alert message={NOT_ENOUGH_LETTERS_MESSAGE} isOpen={isNotEnoughLetters} />
       <Alert
         message={WORD_NOT_FOUND_MESSAGE}
