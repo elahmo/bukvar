@@ -614,6 +614,7 @@ export const WORDS = [
   'mačka',
   'volan',
   'mezar',
+  'prsti',
   'ćumur',
   'guska',
   'višak',
