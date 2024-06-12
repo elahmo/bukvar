@@ -166,7 +166,7 @@ export const WORDS = [
   'jagǌe',
   'bukva',
   'ligǌa',
-  'bodez',
+  'bodež',
   'štivo',
   'šamar',
   'bizon',
