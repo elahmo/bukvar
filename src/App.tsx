@@ -5,7 +5,9 @@ import {
   RefreshIcon,
   SunIcon,
 } from '@heroicons/react/outline'
-import { useState, useEffect } from 'react'
+import Plausible from 'plausible-tracker'
+import { useEffect, useState } from 'react'
+import './App.css'
 import { Alert } from './components/alerts/Alert'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
@@ -14,23 +16,20 @@ import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import {
-  GAME_TITLE,
-  WIN_MESSAGES,
-  GAME_COPIED_MESSAGE,
   ABOUT_GAME_MESSAGE,
-  NOT_ENOUGH_LETTERS_MESSAGE,
-  WORD_NOT_FOUND_MESSAGE,
   CORRECT_WORD_MESSAGE,
+  GAME_COPIED_MESSAGE,
+  GAME_TITLE,
+  NOT_ENOUGH_LETTERS_MESSAGE,
+  WIN_MESSAGES,
+  WORD_NOT_FOUND_MESSAGE,
 } from './constants/strings'
-import { isWordInWordList, isWinningWord, solution } from './lib/words'
-import { addStatsForCompletedGame, loadStats } from './lib/stats'
-import Plausible from 'plausible-tracker'
 import {
   loadGameStateFromLocalStorage,
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
-
-import './App.css'
+import { addStatsForCompletedGame, loadStats } from './lib/stats'
+import { isWinningWord, isWordInWordList, solution } from './lib/words'
 
 const ALERT_TIME_MS = 3000
 

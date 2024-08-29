@@ -21,6 +21,7 @@ export const WIN_MESSAGES = [
   'Podijeli rezultat sa omiljenim prijateljima na Viberu!',
   'Podijeli rezultat sa omiljenim prijateljima na Signalu!',
   'Bolje igraš od svih kolega, a bogme i kolegica!',
+  'Ko je nama rječit??!?',
 ]
 export const GAME_COPIED_MESSAGE = 'Rezultat kopiran, podijeli sa prijateljima'
 export const ABOUT_GAME_MESSAGE = 'O igri'
