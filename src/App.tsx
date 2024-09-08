@@ -15,6 +15,7 @@ import { AboutModal } from './components/modals/AboutModal'
 import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
+import { PravopisLinkModal } from './components/modals/PravopisLinkModal'
 import {
   ABOUT_GAME_MESSAGE,
   CORRECT_WORD_MESSAGE,
@@ -41,6 +42,7 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState('')
   const [isGameWon, setIsGameWon] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
+  const [isPravopisLinkModalOpen, setIsPravopisLinkModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
@@ -79,6 +81,21 @@ function App() {
     domain: 'elahmo.github.io',
     apiHost: 'https://plausible.novalic.xyz',
   })
+
+  const shouldShowPravopisLink = () => {
+    const lastShown = localStorage.getItem('pravopisLinkLastShown')
+    if (!lastShown) return true
+    const oneWeekAgo = new Date()
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+    return new Date(lastShown) < oneWeekAgo
+  }
+
+  useEffect(() => {
+    if (shouldShowPravopisLink()) {
+      setIsPravopisLinkModalOpen(true)
+      localStorage.setItem('pravopisLinkLastShown', new Date().toISOString())
+    }
+  }, [])
 
   useEffect(() => {
     if (isDarkMode) {
@@ -225,6 +242,10 @@ function App() {
       <AboutModal
         isOpen={isAboutModalOpen}
         handleClose={() => setIsAboutModalOpen(false)}
+      />
+      <PravopisLinkModal
+        isOpen={isPravopisLinkModalOpen}
+        handleClose={() => setIsPravopisLinkModalOpen(false)}
       />
 
       <button
