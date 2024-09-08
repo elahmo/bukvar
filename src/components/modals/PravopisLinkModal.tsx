@@ -29,7 +29,6 @@ export const PravopisLinkModal = ({ isOpen, handleClose }: Props) => {
         <a
           href="https://pravopis.novalic.xyz"
           target="_blank"
-          // eslint-disable-next-line react/jsx-no-target-blank
           className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
           onClick={handleClose}
         >
