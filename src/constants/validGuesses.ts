@@ -52232,7 +52232,6 @@ export const VALIDGUESSES = [
   'ulpia',
   'ulric',
   'ulrih',
-  'ulrik',
   'ulsan',
   'ulsun',
   'ulucg',
