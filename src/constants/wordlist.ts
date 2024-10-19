@@ -296,7 +296,6 @@ export const WORDS = [
   'guska',
   'narod',
   'poker',
-  'ulrik',
   'sviǌa',
   'kokoš',
   'maslo',
