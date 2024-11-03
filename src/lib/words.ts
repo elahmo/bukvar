@@ -17,8 +17,8 @@ export const isWinningWord = (word: string) => {
 }
 
 export const getWordOfDay = () => {
-  // update to Dec 28, 2023, DST off
-  const epochMs = 1703714400000
+  // update to Dec 28, 2023, DST on
+  const epochMs = 1703718000000
   const now = Date.now()
   const msInDay = 86400000
   const index = Math.floor((now - epochMs) / msInDay)
