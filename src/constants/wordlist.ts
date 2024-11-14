@@ -322,6 +322,7 @@ export const WORDS = [
   'kolut',
   'pismo',
   'dodir',
+  'sunet',
   'ćufte',
   'ǉekar',
   'odmor',
