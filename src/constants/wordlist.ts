@@ -435,7 +435,7 @@ export const WORDS = [
   'šteta',
   'prdež',
   'kamin',
-  'graǌe',
+  'buket',
   'kvaka',
   'šumar',
   'farsa',
@@ -820,4 +820,5 @@ export const WORDS = [
   'pruga',
   'tetka',
   'feǌer',
+  'graǌe',
 ]
