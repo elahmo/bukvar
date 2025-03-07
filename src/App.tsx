@@ -16,6 +16,7 @@ import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import { PravopisLinkModal } from './components/modals/PravopisLinkModal'
+import { WomensDayModal } from './components/modals/WomensDayModal'
 import {
   ABOUT_GAME_MESSAGE,
   CORRECT_WORD_MESSAGE,
@@ -43,6 +44,7 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isPravopisLinkModalOpen, setIsPravopisLinkModalOpen] = useState(false)
+  const [isWomensDayModalOpen, setIsWomensDayModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
@@ -83,17 +85,33 @@ function App() {
   })
 
   const shouldShowPravopisLink = () => {
+    // Temporarily disable Pravopis banner
+    return false
+
+    // Original implementation
+    /*
     const lastShown = localStorage.getItem('pravopisLinkLastShown')
     if (!lastShown) return true
     const oneWeekAgo = new Date()
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
     return new Date(lastShown) < oneWeekAgo
+    */
+  }
+
+  const isInternationalWomensDay = () => {
+    const today = new Date()
+    return today.getMonth() === 2 && today.getDate() === 8 // March is month 2 (0-indexed)
   }
 
   useEffect(() => {
     if (shouldShowPravopisLink()) {
       setIsPravopisLinkModalOpen(true)
       localStorage.setItem('pravopisLinkLastShown', new Date().toISOString())
+    }
+
+    // Check if it's International Women's Day
+    if (isInternationalWomensDay()) {
+      setIsWomensDayModalOpen(true)
     }
   }, [])
 
@@ -246,6 +264,10 @@ function App() {
       <PravopisLinkModal
         isOpen={isPravopisLinkModalOpen}
         handleClose={() => setIsPravopisLinkModalOpen(false)}
+      />
+      <WomensDayModal
+        isOpen={isWomensDayModalOpen}
+        handleClose={() => setIsWomensDayModalOpen(false)}
       />
 
       <button
