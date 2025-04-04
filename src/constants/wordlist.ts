@@ -1,5 +1,4 @@
 export const WORDS = [
-  'korpa',
   'jelen',
   'znaǌe',
   'izbor',
@@ -821,4 +820,5 @@ export const WORDS = [
   'tetka',
   'feǌer',
   'graǌe',
+  'korpa',
 ]
