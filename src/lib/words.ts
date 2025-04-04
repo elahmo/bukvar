@@ -17,17 +17,19 @@ export const isWinningWord = (word: string) => {
 }
 
 export const getWordOfDay = () => {
-  // update to Dec 28, 2023, DST on
-  const epochMs = 1703718000000
-  const now = Date.now()
-  const msInDay = 86400000
-  const index = Math.floor((now - epochMs) / msInDay)
-  const nextday = (index + 1) * msInDay + epochMs
+  // December 28, 2023 00:00:00 local time
+  const epoch = new Date(2023, 11, 28);
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = start.getTime() - epoch.getTime();
+  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const nextday = new Date(start);
+  nextday.setDate(start.getDate() + 1);
 
   return {
-    solution: WORDS[index % WORDS.length].toUpperCase(),
-    solutionIndex: index,
-    tomorrow: nextday,
+    solution: WORDS[day % WORDS.length].toUpperCase(),
+    solutionIndex: day,
+    tomorrow: nextday.getTime(),
   }
 }
 
