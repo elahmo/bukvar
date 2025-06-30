@@ -19,3 +19,70 @@ html.dark {
   background-clip: text;
   animation: shinyAnimation 3s linear infinite;
 }
+
+@keyframes party-border {
+  0% {
+    border-color: #ff6b6b;
+  }
+  14% {
+    border-color: #4ecdc4;
+  }
+  28% {
+    border-color: #45b7d1;
+  }
+  42% {
+    border-color: #f9ca24;
+  }
+  57% {
+    border-color: #f0932b;
+  }
+  71% {
+    border-color: #eb4d4b;
+  }
+  85% {
+    border-color: #6c5ce7;
+  }
+  100% {
+    border-color: #ff6b6b;
+  }
+}
+
+.party-border {
+  border: 2px solid #ff6b6b;
+  border-radius: 12px;
+  animation: party-border 3s linear infinite;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.sparkle:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.sparkle:nth-child(4) {
+  animation-delay: 0.6s;
+}
+.sparkle:nth-child(5) {
+  animation-delay: 0.8s;
+}

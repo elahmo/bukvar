@@ -62,7 +62,9 @@ export const Keyboard = ({
   }, [onEnter, onDelete, onChar, isSuggestWordModalOpen])
 
   return (
-    <div className="ml-2.5 mr-2.5">
+    <div className="ml-2.5 mr-2.5 relative">
+      <div className="sparkle" style={{top: '5px', left: '10px'}}></div>
+      <div className="sparkle" style={{top: '5px', right: '10px'}}></div>
       <div className="flex justify-center mb-1">
         <Key value="E" onClick={onClick} status={charStatuses['E']} />
         <Key value="R" onClick={onClick} status={charStatuses['R']} />

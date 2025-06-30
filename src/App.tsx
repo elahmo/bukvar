@@ -1,5 +1,6 @@
 import {
   ChartBarIcon,
+  GiftIcon,
   InformationCircleIcon,
   PlusCircleIcon,
   RefreshIcon,
@@ -9,9 +10,11 @@ import Plausible from 'plausible-tracker'
 import { useEffect, useState } from 'react'
 import './App.css'
 import { Alert } from './components/alerts/Alert'
+import ConfettiExplosion from 'react-confetti-explosion'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
+import { BirthdayModal } from './components/modals/BirthdayModal'
 import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
@@ -46,6 +49,9 @@ function App() {
   const [isPravopisLinkModalOpen, setIsPravopisLinkModalOpen] = useState(false)
   const [isWomensDayModalOpen, setIsWomensDayModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
+  const [confettiTriggers, setConfettiTriggers] = useState<number[]>([])
+  const [confettiClickCount, setConfettiClickCount] = useState(0)
+  const [isBirthdayModalOpen, setIsBirthdayModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
   const [isSuggestWordModalOpen, setIsSuggestWordModalOpen] = useState(false)
@@ -228,6 +234,17 @@ function App() {
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsStatsModalOpen(true)}
         />
+        <GiftIcon
+          className="h-6 w-6 mr-2 cursor-pointer animate-bounce text-pink-500 hover:text-pink-600 dark:text-pink-400 dark:hover:text-pink-300"
+          onClick={() => {
+            setConfettiTriggers((prev) => [...prev, Date.now() + Math.random()])
+            const newCount = confettiClickCount + 1
+            setConfettiClickCount(newCount)
+            if (newCount === 5) {
+              setIsBirthdayModalOpen(true)
+            }
+          }}
+        />
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} />
       <Keyboard
@@ -269,6 +286,10 @@ function App() {
         isOpen={isWomensDayModalOpen}
         handleClose={() => setIsWomensDayModalOpen(false)}
       />
+      <BirthdayModal
+        isOpen={isBirthdayModalOpen}
+        handleClose={() => setIsBirthdayModalOpen(false)}
+      />
 
       <button
         type="button"
@@ -288,6 +309,35 @@ function App() {
         isOpen={successAlert !== ''}
         variant="success"
       />
+      {confettiTriggers.map((trigger) => (
+        <div
+          key={trigger}
+          className="fixed inset-0 flex items-center justify-center pointer-events-none z-50"
+        >
+          <ConfettiExplosion
+            force={0.8}
+            duration={3000}
+            particleCount={200}
+            width={window.innerWidth}
+            height={window.innerHeight}
+            colors={[
+              '#ff6b6b',
+              '#4ecdc4',
+              '#45b7d1',
+              '#f9ca24',
+              '#f0932b',
+              '#eb4d4b',
+              '#6c5ce7',
+              '#a55eea',
+              '#26de81',
+              '#fd79a8',
+            ]}
+            onComplete={() =>
+              setConfettiTriggers((prev) => prev.filter((t) => t !== trigger))
+            }
+          />
+        </div>
+      ))}
     </div>
   )
 }
