@@ -240,7 +240,7 @@ function App() {
             setConfettiTriggers((prev) => [...prev, Date.now() + Math.random()])
             const newCount = confettiClickCount + 1
             setConfettiClickCount(newCount)
-            if (newCount === 5) {
+            if (newCount === 3) {
               setIsBirthdayModalOpen(true)
             }
           }}
