@@ -119,6 +119,35 @@ function App() {
     if (isInternationalWomensDay()) {
       setIsWomensDayModalOpen(true)
     }
+
+    // Auto-refresh check for new day - only on fresh page loads
+    const today = new Date().toDateString()
+    const lastVisit = localStorage.getItem('lastVisitDate')
+
+    // Only refresh if this is a fresh page load AND date changed
+    if (
+      lastVisit &&
+      lastVisit !== today &&
+      !sessionStorage.getItem('gameSessionActive')
+    ) {
+      window.location.reload()
+      return
+    }
+
+    localStorage.setItem('lastVisitDate', today)
+    sessionStorage.setItem('gameSessionActive', 'true')
+
+    // Set up interval to check for midnight refresh for long-running sessions
+    const midnightCheck = setInterval(() => {
+      const currentDate = new Date().toDateString()
+      const storedDate = localStorage.getItem('lastVisitDate')
+
+      if (storedDate && storedDate !== currentDate) {
+        window.location.reload()
+      }
+    }, 60000) // Check every minute
+
+    return () => clearInterval(midnightCheck)
   }, [])
 
   useEffect(() => {
