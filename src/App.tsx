@@ -236,13 +236,14 @@ function App() {
         />
         <GiftIcon
           className="h-6 w-6 mr-2 cursor-pointer animate-bounce text-pink-500 hover:text-pink-600 dark:text-pink-400 dark:hover:text-pink-300"
+          style={{
+            animation: 'colorfulPulse 2s ease-in-out infinite',
+          }}
           onClick={() => {
             setConfettiTriggers((prev) => [...prev, Date.now() + Math.random()])
             const newCount = confettiClickCount + 1
             setConfettiClickCount(newCount)
-            if (newCount === 3) {
-              setIsBirthdayModalOpen(true)
-            }
+            setIsBirthdayModalOpen(true)
           }}
         />
       </div>
@@ -316,10 +317,11 @@ function App() {
         >
           <ConfettiExplosion
             force={0.8}
-            duration={3000}
-            particleCount={200}
+            duration={6000}
+            particleCount={300}
             width={window.innerWidth}
             height={window.innerHeight}
+            zIndex={1000}
             colors={[
               '#ff6b6b',
               '#4ecdc4',

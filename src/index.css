@@ -24,3 +24,30 @@
 .shadowed {
   text-shadow: 1px 1px 1px #000000;
 }
+
+@keyframes colorfulPulse {
+  0% {
+    filter: drop-shadow(0 0 4px #ff6b6b);
+  }
+  14% {
+    filter: drop-shadow(0 0 6px #4ecdc4);
+  }
+  28% {
+    filter: drop-shadow(0 0 4px #45b7d1);
+  }
+  42% {
+    filter: drop-shadow(0 0 6px #f9ca24);
+  }
+  56% {
+    filter: drop-shadow(0 0 4px #f0932b);
+  }
+  70% {
+    filter: drop-shadow(0 0 6px #6c5ce7);
+  }
+  84% {
+    filter: drop-shadow(0 0 4px #26de81);
+  }
+  100% {
+    filter: drop-shadow(0 0 6px #fd79a8);
+  }
+}
