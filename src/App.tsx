@@ -114,29 +114,17 @@ function App() {
       setIsWomensDayModalOpen(true)
     }
 
-    // Auto-refresh check for new day - only on fresh page loads
+    // Simple daily refresh check - only set up interval for long-running sessions
     const today = new Date().toDateString()
-    const lastVisit = localStorage.getItem('lastVisitDate')
-
-    // Only refresh if this is a fresh page load AND date changed
-    if (
-      lastVisit &&
-      lastVisit !== today &&
-      !sessionStorage.getItem('gameSessionActive')
-    ) {
-      window.location.reload()
-      return
-    }
-
     localStorage.setItem('lastVisitDate', today)
-    sessionStorage.setItem('gameSessionActive', 'true')
 
-    // Set up interval to check for midnight refresh for long-running sessions
+    // Set up interval to check for date change for long-running sessions
     const midnightCheck = setInterval(() => {
       const currentDate = new Date().toDateString()
       const storedDate = localStorage.getItem('lastVisitDate')
 
       if (storedDate && storedDate !== currentDate) {
+        localStorage.setItem('lastVisitDate', currentDate)
         window.location.reload()
       }
     }, 60000) // Check every minute
