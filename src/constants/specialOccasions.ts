@@ -7,6 +7,12 @@ export interface SpecialOccasion {
 
 export const SPECIAL_OCCASIONS: SpecialOccasion[] = [
   {
+    name: "SAJAM",
+    date: { month: 7, day: 29 }, // August 29th
+    year: 2025,
+    word: 'SAJAM'
+  },
+  {
     name: "Mali lopovcic",
     date: { month: 8, day: 24 }, // September 24th
     year: 2025,
