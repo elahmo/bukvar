@@ -16,7 +16,7 @@ export const SPECIAL_OCCASIONS: SpecialOccasion[] = [
     name: "Mali lopovcic",
     date: { month: 8, day: 24 }, // September 24th
     year: 2025,
-    word: 'lopov'
+    word: 'TORTA'
   },
   {
     name: "Dan državnosti",
