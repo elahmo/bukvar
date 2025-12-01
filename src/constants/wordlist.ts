@@ -701,7 +701,6 @@ export const WORDS = [
   'mamut',
   'ataše',
   'cimer',
-  'čašaf',
   'mrena',
   'laser',
   'tezga',
