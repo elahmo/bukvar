@@ -9,6 +9,7 @@ import Plausible from 'plausible-tracker'
 import { useEffect, useState } from 'react'
 import './App.css'
 import { Alert } from './components/alerts/Alert'
+import { SnowfallOverlay } from './components/effects/SnowfallOverlay'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
@@ -34,6 +35,16 @@ import { addStatsForCompletedGame, loadStats } from './lib/stats'
 import { isWinningWord, isWordInWordList, solution } from './lib/words'
 
 const ALERT_TIME_MS = 3000
+
+const isWinterThemeActive = (date: Date) => {
+  const month = date.getMonth() // 0-indexed
+  const day = date.getDate()
+
+  // Active every year from Dec 15 through Jan 15 (inclusive)
+  const isDecember = month === 11 && day >= 15
+  const isJanuary = month === 0 && day <= 15
+  return isDecember || isJanuary
+}
 
 function App() {
   const prefersDarkMode = window.matchMedia(
@@ -140,6 +151,16 @@ function App() {
     }
   }, [isDarkMode])
 
+  const winterThemeActive = isWinterThemeActive(new Date())
+
+  useEffect(() => {
+    if (winterThemeActive) {
+      document.documentElement.classList.add('winter')
+    } else {
+      document.documentElement.classList.remove('winter')
+    }
+  }, [winterThemeActive])
+
   const handleDarkMode = (isDark: boolean) => {
     setIsDarkMode(isDark)
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
@@ -221,8 +242,36 @@ function App() {
 
   return (
     <div className="py-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
+      {winterThemeActive && <SnowfallOverlay isDarkMode={isDarkMode} />}
       <div className="flex w-80 mx-auto items-center mb-2 mt-2">
-        <h1 className="text-xl ml-2.5 grow font-bold dark:text-white">
+        <h1 className="text-xl ml-2.5 grow font-bold dark:text-white relative">
+          {winterThemeActive && (
+            <svg
+              className="absolute pointer-events-none"
+              style={{
+                top: '-8px',
+                left: '-3px',
+                width: '21px',
+                height: '21px',
+              }}
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              {/* Santa hat */}
+              <path
+                d="M4,18 Q2,18 2,16 L6,8 Q12,4 18,10 L16,16 Q16,18 14,18 Z"
+                fill="#e53935"
+              />
+              <ellipse cx="18" cy="8" rx="3" ry="3" fill="white" />
+              <path
+                d="M2,16 Q2,19 5,19 L13,19 Q16,19 16,16"
+                stroke="white"
+                strokeWidth="3"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
           {GAME_TITLE}
         </h1>
         <PlusCircleIcon
@@ -253,6 +302,8 @@ function App() {
         onEnter={onEnter}
         guesses={guesses}
         isSuggestWordModalOpen={isSuggestWordModalOpen}
+        showSnow={winterThemeActive}
+        isDarkMode={isDarkMode}
       />
       <InfoModal
         isOpen={isInfoModalOpen}
