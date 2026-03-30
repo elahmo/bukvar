@@ -39,12 +39,14 @@ const countSpecialOccasionsBetweenDates = (startDate: Date, endDate: Date): numb
 }
 
 export const getWordOfDay = () => {
-  // December 28, 2023 00:00:00 local time
   const epoch = new Date(2023, 11, 28);
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const diff = start.getTime() - epoch.getTime();
-  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  // Use UTC to compute day index — avoids DST causing ±1h drift in local ms diff
+  const msPerDay = 86400000;
+  const epochUTC = Date.UTC(2023, 11, 28);
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const day = Math.floor((todayUTC - epochUTC) / msPerDay);
   const nextday = new Date(start);
   nextday.setDate(start.getDate() + 1);
 

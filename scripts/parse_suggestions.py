@@ -1,7 +1,7 @@
 import re
 
 # Read words from suggestions
-with open('suggestions.txt', 'r') as file:
+with open('suggestions', 'r') as file:
     suggested_words = set(line.strip() for line in file)
 
 # Read words from wordlist.js, removing quotation marks
