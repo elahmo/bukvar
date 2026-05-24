@@ -24,6 +24,7 @@ import {
   GAME_COPIED_MESSAGE,
   GAME_TITLE,
   NOT_ENOUGH_LETTERS_MESSAGE,
+  SOLVE_TIME_TEXT,
   WIN_MESSAGES,
   WORD_NOT_FOUND_MESSAGE,
 } from './constants/strings'
@@ -32,6 +33,17 @@ import {
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
+import {
+  bucketSolveTime,
+  finishTimer,
+  formatTime,
+  getFinalTime,
+  initTimer,
+  isTimerStarted,
+  pauseTimer,
+  resumeTimer,
+  startTimer,
+} from './lib/timer'
 import { isWinningWord, isWordInWordList, solution } from './lib/words'
 
 const ALERT_TIME_MS = 3000
@@ -89,6 +101,15 @@ function App() {
   })
 
   const [stats, setStats] = useState(() => loadStats())
+  const [todaySolveTimeMs, setTodaySolveTimeMs] = useState<number | null>(
+    () => {
+      initTimer(solution)
+      return getFinalTime()
+    }
+  )
+  const [isTabHidden, setIsTabHidden] = useState(
+    typeof document !== 'undefined' ? document.hidden : false
+  )
 
   const plausible = Plausible({
     domain: 'elahmo.github.io',
@@ -151,6 +172,29 @@ function App() {
     }
   }, [isDarkMode])
 
+  useEffect(() => {
+    const handler = () => setIsTabHidden(document.hidden)
+    document.addEventListener('visibilitychange', handler)
+    return () => document.removeEventListener('visibilitychange', handler)
+  }, [])
+
+  const anyModalOpen =
+    isInfoModalOpen ||
+    isPravopisLinkModalOpen ||
+    isWomensDayModalOpen ||
+    isAboutModalOpen ||
+    isStatsModalOpen ||
+    isSuggestWordModalOpen
+  const shouldPauseTimer = anyModalOpen || isTabHidden
+
+  useEffect(() => {
+    if (shouldPauseTimer) {
+      pauseTimer()
+    } else {
+      resumeTimer()
+    }
+  }, [shouldPauseTimer])
+
   const winterThemeActive = isWinterThemeActive(new Date())
 
   useEffect(() => {
@@ -172,8 +216,13 @@ function App() {
 
   useEffect(() => {
     if (isGameWon) {
-      setSuccessAlert(
+      const baseMsg =
         WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)]
+      const finalMs = todaySolveTimeMs ?? getFinalTime()
+      setSuccessAlert(
+        finalMs !== null
+          ? `${baseMsg} ${SOLVE_TIME_TEXT} ${formatTime(finalMs)}.`
+          : baseMsg
       )
       setTimeout(() => {
         setSuccessAlert('')
@@ -185,10 +234,13 @@ function App() {
         setIsStatsModalOpen(true)
       }, ALERT_TIME_MS)
     }
-  }, [isGameWon, isGameLost])
+  }, [isGameWon, isGameLost, todaySolveTimeMs])
 
   const onChar = (value: string) => {
     if (currentGuess.length < 5 && guesses.length < 6 && !isGameWon) {
+      if (!isTimerStarted()) {
+        startTimer(solution)
+      }
       setCurrentGuess(`${currentGuess}${value}`)
       plausible.trackEvent('char', { props: { char: value } })
     }
@@ -225,16 +277,34 @@ function App() {
       setCurrentGuess('')
 
       if (winningWord) {
-        setStats(addStatsForCompletedGame(stats, guesses.length))
+        const finalMs = finishTimer()
+        setTodaySolveTimeMs(finalMs)
+        setStats(addStatsForCompletedGame(stats, guesses.length, finalMs))
         plausible.trackEvent('gameWon', {
-          props: { guesses: `${guesses.length}`, word: currentGuess },
+          props: {
+            guesses: `${guesses.length}`,
+            word: currentGuess,
+            ...(finalMs !== null && {
+              solveTimeSec: Math.round(finalMs / 1000),
+              solveTimeBucket: bucketSolveTime(finalMs),
+            }),
+          },
         })
         return setIsGameWon(true)
       }
 
       if (guesses.length === 5) {
+        const finalMs = finishTimer()
         setStats(addStatsForCompletedGame(stats, guesses.length + 1))
-        plausible.trackEvent('gameLost', { props: { word: currentGuess } })
+        plausible.trackEvent('gameLost', {
+          props: {
+            word: currentGuess,
+            ...(finalMs !== null && {
+              solveTimeSec: Math.round(finalMs / 1000),
+              solveTimeBucket: bucketSolveTime(finalMs),
+            }),
+          },
+        })
         setIsGameLost(true)
       }
     }
@@ -316,6 +386,7 @@ function App() {
         gameStats={stats}
         isGameLost={isGameLost}
         isGameWon={isGameWon}
+        todaySolveTimeMs={todaySolveTimeMs}
         handleShare={() => {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
