@@ -48,7 +48,7 @@ export const StatBar = ({ gameStats }: Props) => {
         <StatItem label={BEST_STREAK_TEXT} value={gameStats.bestStreak} />
       </div>
       {hasTimes && gameStats.bestTimeMs !== undefined && (
-        <div className="flex justify-center my-2">
+        <div className="flex justify-center gap-x-6 my-2">
           <StatItem
             label={BEST_TIME_TEXT}
             value={formatTime(gameStats.bestTimeMs)}
