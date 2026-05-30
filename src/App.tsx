@@ -118,9 +118,12 @@ function App() {
       return getFinalTime()
     }
   )
-  const [isConsentModalOpen, setIsConsentModalOpen] = useState(
-    timeTrackingPreference === null
-  )
+  const isConsentPending = timeTrackingPreference === null
+  // Stack with the InfoModal: the consent modal only becomes visible once the
+  // intro popup is dismissed (or wasn't shown to begin with). Input is gated
+  // on isConsentPending regardless, so users can't sneak guesses through
+  // while one modal hides behind the other.
+  const isConsentModalVisible = isConsentPending && !isInfoModalOpen
   const [isTabHidden, setIsTabHidden] = useState(
     typeof document !== 'undefined' ? document.hidden : false
   )
@@ -199,7 +202,7 @@ function App() {
     isAboutModalOpen ||
     isStatsModalOpen ||
     isSuggestWordModalOpen ||
-    isConsentModalOpen
+    isConsentModalVisible
   const shouldPauseTimer = anyModalOpen || isTabHidden
 
   useEffect(() => {
@@ -231,7 +234,6 @@ function App() {
     setTimeTrackingPreference('on')
     initTimer(solution)
     setTodaySolveTimeMs(getFinalTime())
-    setIsConsentModalOpen(false)
   }
 
   const handleDisableTimeTracking = () => {
@@ -239,7 +241,6 @@ function App() {
     setTimeTrackingPreference('off')
     clearTimer()
     setTodaySolveTimeMs(null)
-    setIsConsentModalOpen(false)
   }
 
   useEffect(() => {
@@ -269,7 +270,7 @@ function App() {
   }, [isGameWon, isGameLost, todaySolveTimeMs])
 
   const onChar = (value: string) => {
-    if (isConsentModalOpen) return
+    if (isConsentPending) return
     if (currentGuess.length < 5 && guesses.length < 6 && !isGameWon) {
       if (isTimeTrackingEnabled && !isTimerStarted()) {
         startTimer(solution)
@@ -280,12 +281,12 @@ function App() {
   }
 
   const onDelete = () => {
-    if (isConsentModalOpen) return
+    if (isConsentPending) return
     setCurrentGuess(currentGuess.slice(0, -1))
   }
 
   const onEnter = () => {
-    if (isConsentModalOpen) return
+    if (isConsentPending) return
     if (isGameWon || isGameLost) {
       return
     }
@@ -407,7 +408,7 @@ function App() {
         onEnter={onEnter}
         guesses={guesses}
         isSuggestWordModalOpen={isSuggestWordModalOpen}
-        isConsentModalOpen={isConsentModalOpen}
+        isConsentModalOpen={isConsentPending}
         showSnow={winterThemeActive}
         isDarkMode={isDarkMode}
       />
@@ -446,7 +447,7 @@ function App() {
         handleClose={() => setIsWomensDayModalOpen(false)}
       />
       <TimeTrackingConsentModal
-        isOpen={isConsentModalOpen}
+        isOpen={isConsentModalVisible}
         handleEnable={handleEnableTimeTracking}
         handleDisable={handleDisableTimeTracking}
       />

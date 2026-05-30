@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/bukvar/static/css/main.7d0c7b5b.css",
-    "main.js": "/bukvar/static/js/main.d25ab97c.js",
+    "main.css": "/bukvar/static/css/main.f2209dc1.css",
+    "main.js": "/bukvar/static/js/main.1839daff.js",
     "static/js/787.bd92c815.chunk.js": "/bukvar/static/js/787.bd92c815.chunk.js",
     "index.html": "/bukvar/index.html",
-    "main.7d0c7b5b.css.map": "/bukvar/static/css/main.7d0c7b5b.css.map",
-    "main.d25ab97c.js.map": "/bukvar/static/js/main.d25ab97c.js.map",
+    "main.f2209dc1.css.map": "/bukvar/static/css/main.f2209dc1.css.map",
+    "main.1839daff.js.map": "/bukvar/static/js/main.1839daff.js.map",
     "787.bd92c815.chunk.js.map": "/bukvar/static/js/787.bd92c815.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7d0c7b5b.css",
-    "static/js/main.d25ab97c.js"
+    "static/css/main.f2209dc1.css",
+    "static/js/main.1839daff.js"
   ]
 }

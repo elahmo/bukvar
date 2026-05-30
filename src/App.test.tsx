@@ -35,8 +35,19 @@ test('renders App component', () => {
   expect(linkElement).toBeInTheDocument()
 })
 
+// Returning users have a gameState entry; suppressing the auto-open of the
+// intro InfoModal lets us assert on the consent modal directly. The brand-new
+// user flow (InfoModal first, then consent) is covered in the "modal stacking"
+// describe block below.
+const seedReturningUser = () =>
+  localStorage.setItem(
+    'gameState',
+    JSON.stringify({ guesses: [], solution: 'placeholder' })
+  )
+
 describe('time-tracking consent flow', () => {
   test('shows the consent modal on first load when no preference is saved', () => {
+    seedReturningUser()
     render(<App />)
     expect(screen.getByText(TIME_TRACKING_CONSENT_TITLE)).toBeInTheDocument()
   })
@@ -58,6 +69,7 @@ describe('time-tracking consent flow', () => {
   })
 
   test('clicking "enable" persists "on" and closes the modal', async () => {
+    seedReturningUser()
     render(<App />)
     fireEvent.click(
       screen.getByRole('button', { name: TIME_TRACKING_CONSENT_ENABLE })
@@ -73,6 +85,7 @@ describe('time-tracking consent flow', () => {
   })
 
   test('clicking "disable" persists "off", clears any timer state, and closes the modal', async () => {
+    seedReturningUser()
     localStorage.setItem(
       'gameTimer',
       JSON.stringify({
@@ -97,6 +110,7 @@ describe('time-tracking consent flow', () => {
   })
 
   test('keyboard input is ignored while the consent modal is open', () => {
+    seedReturningUser()
     render(<App />)
     expect(screen.getByText(TIME_TRACKING_CONSENT_TITLE)).toBeInTheDocument()
     fireEvent.keyUp(window, { code: 'KeyA', key: 'a' })
@@ -113,6 +127,7 @@ describe('time-tracking consent flow', () => {
   })
 
   test('virtual keyboard clicks are ignored while the consent modal is open', () => {
+    seedReturningUser()
     render(<App />)
     expect(screen.getByText(TIME_TRACKING_CONSENT_TITLE)).toBeInTheDocument()
     // Click multiple on-screen letter keys — Bukvar renders each as its own
@@ -145,6 +160,7 @@ describe('time-tracking consent flow', () => {
   })
 
   test('existing user with active gameTimer + null preference: enable preserves prior progress', async () => {
+    seedReturningUser()
     // Pre-populate localStorage as if the user had played mid-puzzle under a
     // previous build (before the consent popup existed). We can't easily seed
     // the EXACT current solution string here, so we use a placeholder — the
@@ -175,6 +191,47 @@ describe('time-tracking consent flow', () => {
     // important thing is the app didn't throw and the preference stuck.
     expect(['on']).toContain(
       JSON.parse(localStorage.getItem('timeTrackingPreference') as string)
+    )
+  })
+})
+
+describe('modal stacking — brand new user', () => {
+  // With no localStorage at all, the existing intro InfoModal auto-opens.
+  // Before this fix, the consent modal also rendered at the same z-index and
+  // they stomped on each other. They should now show one at a time.
+
+  test('on first ever load, the InfoModal is visible and the consent modal is hidden behind it', () => {
+    render(<App />)
+    // InfoModal title is "Kako igrati?"
+    expect(screen.getByText('Kako igrati?')).toBeInTheDocument()
+    expect(
+      screen.queryByText(TIME_TRACKING_CONSENT_TITLE)
+    ).not.toBeInTheDocument()
+  })
+
+  test('input is blocked while the InfoModal is on top and consent is still pending', () => {
+    render(<App />)
+    fireEvent.keyUp(window, { code: 'KeyA', key: 'a' })
+    fireEvent.keyUp(window, { code: 'KeyB', key: 'b' })
+    expect(localStorage.getItem('gameTimer')).toBeNull()
+    // No guesses recorded either:
+    const stored = localStorage.getItem('gameState')
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      expect(parsed.guesses).toEqual([])
+    }
+  })
+
+  test('closing the InfoModal reveals the consent modal underneath', async () => {
+    render(<App />)
+    expect(screen.getByText('Kako igrati?')).toBeInTheDocument()
+    // Modals render in a Headless UI portal outside the render container —
+    // query the document and click the InfoModal's X icon.
+    const xButton = document.querySelector('svg.h-6.w-6.cursor-pointer')
+    expect(xButton).toBeTruthy()
+    fireEvent.click(xButton as Element)
+    await waitFor(() =>
+      expect(screen.getByText(TIME_TRACKING_CONSENT_TITLE)).toBeInTheDocument()
     )
   })
 })
