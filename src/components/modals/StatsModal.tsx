@@ -22,6 +22,7 @@ type Props = {
   isGameLost: boolean
   isGameWon: boolean
   todaySolveTimeMs: number | null
+  isTimeTrackingEnabled: boolean
   handleShare: () => void
 }
 
@@ -33,6 +34,7 @@ export const StatsModal = ({
   isGameLost,
   isGameWon,
   todaySolveTimeMs,
+  isTimeTrackingEnabled,
   handleShare,
 }: Props) => {
   if (gameStats.totalGames <= 0) {
@@ -42,7 +44,10 @@ export const StatsModal = ({
         isOpen={isOpen}
         handleClose={handleClose}
       >
-        <StatBar gameStats={gameStats} />
+        <StatBar
+          gameStats={gameStats}
+          isTimeTrackingEnabled={isTimeTrackingEnabled}
+        />
       </BaseModal>
     )
   }
@@ -52,7 +57,10 @@ export const StatsModal = ({
       isOpen={isOpen}
       handleClose={handleClose}
     >
-      <StatBar gameStats={gameStats} />
+      <StatBar
+        gameStats={gameStats}
+        isTimeTrackingEnabled={isTimeTrackingEnabled}
+      />
       <h4 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
         {GUESS_DISTRIBUTION_TEXT}
       </h4>

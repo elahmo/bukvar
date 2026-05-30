@@ -11,6 +11,7 @@ import {
 
 type Props = {
   gameStats: GameStats
+  isTimeTrackingEnabled: boolean
 }
 
 const StatItem = ({
@@ -28,7 +29,7 @@ const StatItem = ({
   )
 }
 
-export const StatBar = ({ gameStats }: Props) => {
+export const StatBar = ({ gameStats, isTimeTrackingEnabled }: Props) => {
   const timedGames = gameStats.timedGames ?? 0
   const hasTimes = timedGames > 0
   const avgTimeMs =
@@ -47,7 +48,7 @@ export const StatBar = ({ gameStats }: Props) => {
         <StatItem label={CURRENT_STREAK_TEXT} value={gameStats.currentStreak} />
         <StatItem label={BEST_STREAK_TEXT} value={gameStats.bestStreak} />
       </div>
-      {hasTimes && gameStats.bestTimeMs !== undefined && (
+      {isTimeTrackingEnabled && hasTimes && gameStats.bestTimeMs !== undefined && (
         <div className="flex justify-center gap-x-6 my-2">
           <StatItem
             label={BEST_TIME_TEXT}

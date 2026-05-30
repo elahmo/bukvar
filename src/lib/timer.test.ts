@@ -1,6 +1,7 @@
 import {
   __resetForTests,
   bucketSolveTime,
+  clearTimer,
   finishTimer,
   formatTime,
   getElapsed,
@@ -180,5 +181,37 @@ describe('initTimer (persistence and day boundaries)', () => {
     initTimer(TODAY)
     expect(isTimerStarted()).toBe(false)
     expect(localStorage.getItem('gameTimer')).toBeNull()
+  })
+})
+
+describe('clearTimer', () => {
+  test('wipes in-memory state and the gameTimer localStorage key', () => {
+    jest.useFakeTimers().setSystemTime(new Date(2026, 0, 1, 12, 0, 0))
+    startTimer(TODAY)
+    jest.advanceTimersByTime(5_000)
+    pauseTimer()
+    expect(localStorage.getItem('gameTimer')).not.toBeNull()
+    expect(isTimerStarted()).toBe(true)
+    clearTimer()
+    expect(isTimerStarted()).toBe(false)
+    expect(localStorage.getItem('gameTimer')).toBeNull()
+    jest.useRealTimers()
+  })
+
+  test('is a safe no-op when no timer has been started', () => {
+    expect(() => clearTimer()).not.toThrow()
+    expect(isTimerStarted()).toBe(false)
+    expect(localStorage.getItem('gameTimer')).toBeNull()
+  })
+
+  test('after clearTimer, a fresh startTimer works normally', () => {
+    jest.useFakeTimers().setSystemTime(new Date(2026, 0, 1, 12, 0, 0))
+    startTimer(TODAY)
+    jest.advanceTimersByTime(2_000)
+    clearTimer()
+    startTimer(TODAY)
+    jest.advanceTimersByTime(1_000)
+    expect(getElapsed()).toBe(1_000)
+    jest.useRealTimers()
   })
 })

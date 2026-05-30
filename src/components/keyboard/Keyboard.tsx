@@ -10,6 +10,7 @@ type Props = {
   onEnter: () => void
   guesses: string[]
   isSuggestWordModalOpen: boolean
+  isConsentModalOpen?: boolean
   showSnow?: boolean
   isDarkMode?: boolean
 }
@@ -20,12 +21,14 @@ export const Keyboard = ({
   onEnter,
   guesses,
   isSuggestWordModalOpen,
+  isConsentModalOpen = false,
   showSnow = false,
   isDarkMode = false,
 }: Props) => {
   const charStatuses = getStatuses(guesses)
 
   const onClick = (value: KeyValue) => {
+    if (isConsentModalOpen) return
     if (value === 'ENTER') {
       onEnter()
     } else if (value === 'DELETE') {
@@ -37,7 +40,7 @@ export const Keyboard = ({
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      if (isSuggestWordModalOpen) {
+      if (isSuggestWordModalOpen || isConsentModalOpen) {
         return
       }
       if (e.code === 'Enter') {
@@ -63,7 +66,7 @@ export const Keyboard = ({
     return () => {
       window.removeEventListener('keyup', listener)
     }
-  }, [onEnter, onDelete, onChar, isSuggestWordModalOpen])
+  }, [onEnter, onDelete, onChar, isSuggestWordModalOpen, isConsentModalOpen])
 
   return (
     <div className="ml-2.5 mr-2.5 relative">

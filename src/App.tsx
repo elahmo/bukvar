@@ -17,6 +17,7 @@ import { InfoModal } from './components/modals/InfoModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import { PravopisLinkModal } from './components/modals/PravopisLinkModal'
+import { TimeTrackingConsentModal } from './components/modals/TimeTrackingConsentModal'
 import { WomensDayModal } from './components/modals/WomensDayModal'
 import {
   ABOUT_GAME_MESSAGE,
@@ -30,11 +31,15 @@ import {
 } from './constants/strings'
 import {
   loadGameStateFromLocalStorage,
+  loadTimeTrackingPreferenceFromLocalStorage,
   saveGameStateToLocalStorage,
+  saveTimeTrackingPreferenceToLocalStorage,
+  TimeTrackingPreference,
 } from './lib/localStorage'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 import {
   bucketSolveTime,
+  clearTimer,
   finishTimer,
   formatTime,
   getFinalTime,
@@ -101,11 +106,20 @@ function App() {
   })
 
   const [stats, setStats] = useState(() => loadStats())
+  const [timeTrackingPreference, setTimeTrackingPreference] =
+    useState<TimeTrackingPreference | null>(() =>
+      loadTimeTrackingPreferenceFromLocalStorage()
+    )
+  const isTimeTrackingEnabled = timeTrackingPreference === 'on'
   const [todaySolveTimeMs, setTodaySolveTimeMs] = useState<number | null>(
     () => {
+      if (timeTrackingPreference !== 'on') return null
       initTimer(solution)
       return getFinalTime()
     }
+  )
+  const [isConsentModalOpen, setIsConsentModalOpen] = useState(
+    timeTrackingPreference === null
   )
   const [isTabHidden, setIsTabHidden] = useState(
     typeof document !== 'undefined' ? document.hidden : false
@@ -184,16 +198,18 @@ function App() {
     isWomensDayModalOpen ||
     isAboutModalOpen ||
     isStatsModalOpen ||
-    isSuggestWordModalOpen
+    isSuggestWordModalOpen ||
+    isConsentModalOpen
   const shouldPauseTimer = anyModalOpen || isTabHidden
 
   useEffect(() => {
+    if (!isTimeTrackingEnabled) return
     if (shouldPauseTimer) {
       pauseTimer()
     } else {
       resumeTimer()
     }
-  }, [shouldPauseTimer])
+  }, [shouldPauseTimer, isTimeTrackingEnabled])
 
   const winterThemeActive = isWinterThemeActive(new Date())
 
@@ -208,6 +224,22 @@ function App() {
   const handleDarkMode = (isDark: boolean) => {
     setIsDarkMode(isDark)
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
+  }
+
+  const handleEnableTimeTracking = () => {
+    saveTimeTrackingPreferenceToLocalStorage('on')
+    setTimeTrackingPreference('on')
+    initTimer(solution)
+    setTodaySolveTimeMs(getFinalTime())
+    setIsConsentModalOpen(false)
+  }
+
+  const handleDisableTimeTracking = () => {
+    saveTimeTrackingPreferenceToLocalStorage('off')
+    setTimeTrackingPreference('off')
+    clearTimer()
+    setTodaySolveTimeMs(null)
+    setIsConsentModalOpen(false)
   }
 
   useEffect(() => {
@@ -237,8 +269,9 @@ function App() {
   }, [isGameWon, isGameLost, todaySolveTimeMs])
 
   const onChar = (value: string) => {
+    if (isConsentModalOpen) return
     if (currentGuess.length < 5 && guesses.length < 6 && !isGameWon) {
-      if (!isTimerStarted()) {
+      if (isTimeTrackingEnabled && !isTimerStarted()) {
         startTimer(solution)
       }
       setCurrentGuess(`${currentGuess}${value}`)
@@ -247,10 +280,12 @@ function App() {
   }
 
   const onDelete = () => {
+    if (isConsentModalOpen) return
     setCurrentGuess(currentGuess.slice(0, -1))
   }
 
   const onEnter = () => {
+    if (isConsentModalOpen) return
     if (isGameWon || isGameLost) {
       return
     }
@@ -277,7 +312,7 @@ function App() {
       setCurrentGuess('')
 
       if (winningWord) {
-        const finalMs = finishTimer()
+        const finalMs = isTimeTrackingEnabled ? finishTimer() : null
         setTodaySolveTimeMs(finalMs)
         setStats(addStatsForCompletedGame(stats, guesses.length, finalMs))
         plausible.trackEvent('gameWon', {
@@ -294,7 +329,7 @@ function App() {
       }
 
       if (guesses.length === 5) {
-        const finalMs = finishTimer()
+        const finalMs = isTimeTrackingEnabled ? finishTimer() : null
         setStats(addStatsForCompletedGame(stats, guesses.length + 1))
         plausible.trackEvent('gameLost', {
           props: {
@@ -372,6 +407,7 @@ function App() {
         onEnter={onEnter}
         guesses={guesses}
         isSuggestWordModalOpen={isSuggestWordModalOpen}
+        isConsentModalOpen={isConsentModalOpen}
         showSnow={winterThemeActive}
         isDarkMode={isDarkMode}
       />
@@ -387,6 +423,7 @@ function App() {
         isGameLost={isGameLost}
         isGameWon={isGameWon}
         todaySolveTimeMs={todaySolveTimeMs}
+        isTimeTrackingEnabled={isTimeTrackingEnabled}
         handleShare={() => {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
@@ -407,6 +444,11 @@ function App() {
       <WomensDayModal
         isOpen={isWomensDayModalOpen}
         handleClose={() => setIsWomensDayModalOpen(false)}
+      />
+      <TimeTrackingConsentModal
+        isOpen={isConsentModalOpen}
+        handleEnable={handleEnableTimeTracking}
+        handleDisable={handleDisableTimeTracking}
       />
 
       <button

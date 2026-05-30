@@ -36,3 +36,24 @@ export const loadStatsFromLocalStorage = () => {
   const stats = localStorage.getItem(gameStatKey)
   return stats ? (JSON.parse(stats) as GameStats) : null
 }
+
+const timeTrackingPreferenceKey = 'timeTrackingPreference'
+
+export type TimeTrackingPreference = 'on' | 'off'
+
+export const saveTimeTrackingPreferenceToLocalStorage = (
+  preference: TimeTrackingPreference
+) => {
+  localStorage.setItem(timeTrackingPreferenceKey, JSON.stringify(preference))
+}
+
+export const loadTimeTrackingPreferenceFromLocalStorage = (): TimeTrackingPreference | null => {
+  const raw = localStorage.getItem(timeTrackingPreferenceKey)
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw) as unknown
+    return parsed === 'on' || parsed === 'off' ? parsed : null
+  } catch {
+    return null
+  }
+}

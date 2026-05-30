@@ -133,6 +133,12 @@ export const bucketSolveTime = (ms: number): string => {
   return '>10m'
 }
 
+export const clearTimer = (): void => {
+  stopTicking()
+  state = null
+  localStorage.removeItem(STORAGE_KEY)
+}
+
 export const __resetForTests = (): void => {
   stopTicking()
   state = null

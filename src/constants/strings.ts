@@ -43,3 +43,13 @@ export const SOLVE_TIME_TEXT = 'Riješeno za'
 export const TODAY_TIME_TEXT = 'Današnje vrijeme'
 export const BEST_TIME_TEXT = 'Najbolje vrijeme'
 export const AVG_TIME_TEXT = 'Prosječno vrijeme'
+
+export const TIME_TRACKING_CONSENT_TITLE = 'Mjerenje vremena'
+export const TIME_TRACKING_CONSENT_BODY =
+  'Bukvar sada može mjeriti koliko ti treba da pogodiš današnju riječ. Štoperica kreće s prvim slovom i pauzira kada ne igraš aktivno ili si u drugom prozoru.'
+export const TIME_TRACKING_CONSENT_BODY_2 =
+  'Ako ti to stvara pritisak, bez pritiska, isključi! Bukvar ostaje ista igra.'
+export const TIME_TRACKING_CONSENT_HINT =
+  'Ovo ćeš moći promijeniti u postavkama čim ih dodamo.'
+export const TIME_TRACKING_CONSENT_ENABLE = 'Uključi mjerenje'
+export const TIME_TRACKING_CONSENT_DISABLE = 'Ne, hvala'
