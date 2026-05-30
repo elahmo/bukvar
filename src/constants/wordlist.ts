@@ -57,7 +57,7 @@ export const WORDS = [
   'metak',
   'papir',
   'korak',
-  'vašer',
+  'vašar',
   'letva',
   'finiš',
   'kovač',
