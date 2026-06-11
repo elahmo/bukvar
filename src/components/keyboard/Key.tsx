@@ -59,8 +59,12 @@ export const Key = ({
   isDarkMode = false,
 }: Props) => {
   const snowPath = useMemo(() => generateSnowPath(value, width), [value, width])
-  const snowColorTop = isDarkMode ? 'rgba(255,255,255,0.9)' : 'rgba(140,170,200,0.85)'
-  const snowColorBottom = isDarkMode ? 'rgba(255,255,255,0.4)' : 'rgba(140,170,200,0.3)'
+  const snowColorTop = isDarkMode
+    ? 'rgba(255,255,255,0.9)'
+    : 'rgba(140,170,200,0.85)'
+  const snowColorBottom = isDarkMode
+    ? 'rgba(255,255,255,0.4)'
+    : 'rgba(140,170,200,0.3)'
   const classes = classnames(
     'flex items-center justify-center rounded mx-0.5 text-xs font-bold cursor-pointer select-none dark:text-white',
     {
@@ -99,7 +103,13 @@ export const Key = ({
           preserveAspectRatio="none"
         >
           <defs>
-            <linearGradient id={`snow-${value}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient
+              id={`snow-${value}`}
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
               <stop offset="0%" stopColor={snowColorTop} />
               <stop offset="100%" stopColor={snowColorBottom} />
             </linearGradient>

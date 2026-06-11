@@ -10,4 +10,13 @@ class MockIntersectionObserver {
   disconnect() {}
 }
 
-global.IntersectionObserver = MockIntersectionObserver
+global.IntersectionObserver =
+  MockIntersectionObserver as unknown as typeof IntersectionObserver
+
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver

@@ -24,10 +24,12 @@ export const shareStatus = (
   const shareText = buildShareText(guesses, lost, solveTimeMs)
   navigator.clipboard.writeText(shareText)
 
-  const shareData = {
-    text: shareText,
+  // Web Share API is missing on desktop Firefox and older browsers — calling
+  // it unguarded throws and prevents the "copied" toast from showing. The
+  // rejection on user-cancel is expected; clipboard copy already succeeded.
+  if (typeof navigator.share === 'function') {
+    navigator.share({ text: shareText }).catch(() => {})
   }
-  navigator.share(shareData)
 }
 
 export const generateEmojiGrid = (guesses: string[]) => {

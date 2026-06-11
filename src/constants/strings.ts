@@ -50,6 +50,15 @@ export const TIME_TRACKING_CONSENT_BODY =
 export const TIME_TRACKING_CONSENT_BODY_2 =
   'Ako ti to stvara pritisak, bez pritiska, isključi! Bukvar ostaje ista igra.'
 export const TIME_TRACKING_CONSENT_HINT =
-  'Ovo ćeš moći promijeniti u postavkama čim ih dodamo.'
+  'Ovo uvijek možeš promijeniti u postavkama.'
 export const TIME_TRACKING_CONSENT_ENABLE = 'Uključi mjerenje'
 export const TIME_TRACKING_CONSENT_DISABLE = 'Ne, hvala'
+
+export const SETTINGS_TITLE = 'Postavke'
+export const DARK_MODE_TEXT = 'Tamni način'
+export const TIME_TRACKING_SETTING_TEXT = 'Mjerenje vremena'
+export const TIME_TRACKING_SETTING_DESCRIPTION =
+  'Štoperica kreće s prvim slovom i pauzira kada skloniš karticu'
+export const REFRESH_SETTING_TEXT = 'Osvježi igru'
+export const REFRESH_SETTING_DESCRIPTION =
+  'Ne vidiš novu riječ? Osvježi igru ovdje'

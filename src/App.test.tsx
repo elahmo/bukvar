@@ -3,9 +3,11 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from './App'
 import {
   GAME_TITLE,
+  SETTINGS_TITLE,
   TIME_TRACKING_CONSENT_TITLE,
   TIME_TRACKING_CONSENT_ENABLE,
   TIME_TRACKING_CONSENT_DISABLE,
+  TIME_TRACKING_SETTING_TEXT,
 } from './constants/strings'
 
 beforeEach(() => {
@@ -233,5 +235,57 @@ describe('modal stacking — brand new user', () => {
     await waitFor(() =>
       expect(screen.getByText(TIME_TRACKING_CONSENT_TITLE)).toBeInTheDocument()
     )
+  })
+})
+
+describe('settings modal', () => {
+  const openSettings = () => {
+    const cog = document.querySelector(`svg[aria-label="${SETTINGS_TITLE}"]`)
+    expect(cog).toBeTruthy()
+    fireEvent.click(cog as Element)
+  }
+
+  test('cog icon opens the settings modal', () => {
+    localStorage.setItem('timeTrackingPreference', JSON.stringify('on'))
+    render(<App />)
+    openSettings()
+    expect(screen.getByText(SETTINGS_TITLE)).toBeInTheDocument()
+    expect(screen.getByText(TIME_TRACKING_SETTING_TEXT)).toBeInTheDocument()
+  })
+
+  test('turning time tracking off via settings persists "off" and clears the timer', () => {
+    localStorage.setItem('timeTrackingPreference', JSON.stringify('on'))
+    render(<App />)
+    // Start the timer by typing, then flip the toggle off.
+    fireEvent.keyUp(window, { code: 'KeyA', key: 'a' })
+    expect(localStorage.getItem('gameTimer')).not.toBeNull()
+    openSettings()
+    fireEvent.click(
+      screen.getByRole('switch', { name: TIME_TRACKING_SETTING_TEXT })
+    )
+    expect(localStorage.getItem('timeTrackingPreference')).toBe(
+      JSON.stringify('off')
+    )
+    expect(localStorage.getItem('gameTimer')).toBeNull()
+  })
+
+  test('turning time tracking on via settings persists "on"', () => {
+    localStorage.setItem('timeTrackingPreference', JSON.stringify('off'))
+    render(<App />)
+    openSettings()
+    fireEvent.click(
+      screen.getByRole('switch', { name: TIME_TRACKING_SETTING_TEXT })
+    )
+    expect(localStorage.getItem('timeTrackingPreference')).toBe(
+      JSON.stringify('on')
+    )
+  })
+
+  test('dark mode toggle in settings persists the theme', () => {
+    localStorage.setItem('timeTrackingPreference', JSON.stringify('on'))
+    render(<App />)
+    openSettings()
+    fireEvent.click(screen.getByRole('switch', { name: 'Tamni način' }))
+    expect(localStorage.getItem('theme')).toBe('dark')
   })
 })

@@ -7,38 +7,43 @@ export interface SpecialOccasion {
 
 export const SPECIAL_OCCASIONS: SpecialOccasion[] = [
   {
-    name: "SAJAM",
+    name: 'SAJAM',
     date: { month: 7, day: 29 }, // August 29th
     year: 2025,
-    word: 'SAJAM'
+    word: 'SAJAM',
   },
   {
-    name: "Mali lopovcic",
+    name: 'Mali lopovcic',
     date: { month: 8, day: 24 }, // September 24th
     year: 2025,
-    word: 'TORTA'
+    word: 'TORTA',
   },
   {
-    name: "Dan državnosti",
+    name: 'Dan državnosti',
     date: { month: 10, day: 25 }, // November 25th
     year: 2026,
-    word: 'ponos'
+    word: 'ponos',
   },
 ]
 
-export const getSpecialOccasionForDate = (date: Date): SpecialOccasion | null => {
+export const getSpecialOccasionForDate = (
+  date: Date
+): SpecialOccasion | null => {
   const month = date.getMonth()
   const day = date.getDate()
   const year = date.getFullYear()
 
-  return SPECIAL_OCCASIONS.find(occasion => {
-    const matchesDate = occasion.date.month === month && occasion.date.day === day
-    const matchesYear = !occasion.year || occasion.year === year
-    return matchesDate && matchesYear
-  }) || null
+  return (
+    SPECIAL_OCCASIONS.find((occasion) => {
+      const matchesDate =
+        occasion.date.month === month && occasion.date.day === day
+      const matchesYear = !occasion.year || occasion.year === year
+      return matchesDate && matchesYear
+    }) || null
+  )
 }
 
 // Get all special occasion words (for adding to rotation)
 export const getSpecialOccasionWords = (): string[] => {
-  return SPECIAL_OCCASIONS.map(occasion => occasion.word)
+  return SPECIAL_OCCASIONS.map((occasion) => occasion.word)
 }

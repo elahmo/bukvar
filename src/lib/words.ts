@@ -1,6 +1,9 @@
 import { WORDS } from '../constants/wordlist'
 import { VALIDGUESSES } from '../constants/validGuesses'
-import { getSpecialOccasionForDate, getSpecialOccasionWords } from '../constants/specialOccasions'
+import {
+  getSpecialOccasionForDate,
+  getSpecialOccasionWords,
+} from '../constants/specialOccasions'
 
 export const isWordInWordList = (word: string) => {
   const specialWords = getSpecialOccasionWords()
@@ -24,48 +27,54 @@ export const isWinningWord = (word: string) => {
 }
 
 // Count how many special occasion days occurred between two dates
-const countSpecialOccasionsBetweenDates = (startDate: Date, endDate: Date): number => {
+const countSpecialOccasionsBetweenDates = (
+  startDate: Date,
+  endDate: Date
+): number => {
   let count = 0
   const current = new Date(startDate)
-  
+
   while (current < endDate) {
     if (getSpecialOccasionForDate(current)) {
       count++
     }
     current.setDate(current.getDate() + 1)
   }
-  
+
   return count
 }
 
 export const getWordOfDay = () => {
-  const epoch = new Date(2023, 11, 28);
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const epoch = new Date(2023, 11, 28)
+  const now = new Date()
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   // Use UTC to compute day index — avoids DST causing ±1h drift in local ms diff
-  const msPerDay = 86400000;
-  const epochUTC = Date.UTC(2023, 11, 28);
-  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  const day = Math.floor((todayUTC - epochUTC) / msPerDay);
-  const nextday = new Date(start);
-  nextday.setDate(start.getDate() + 1);
+  const msPerDay = 86400000
+  const epochUTC = Date.UTC(2023, 11, 28)
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+  const day = Math.floor((todayUTC - epochUTC) / msPerDay)
+  const nextday = new Date(start)
+  nextday.setDate(start.getDate() + 1)
 
   // Check if today is a special occasion
   const specialOccasion = getSpecialOccasionForDate(start)
-  
+
   if (specialOccasion) {
     // Use special occasion word, normal progression continues tomorrow
     return {
       solution: specialOccasion.word.toUpperCase(),
       solutionIndex: day,
       tomorrow: nextday.getTime(),
-      specialOccasion: specialOccasion.name // Optional: expose the occasion name
+      specialOccasion: specialOccasion.name, // Optional: expose the occasion name
     }
   }
 
-  // Calculate regular word index by subtracting special occasion days
+  // Calculate regular word index by subtracting special occasion days.
+  // Double modulo keeps the index positive even if a device clock is set
+  // before the epoch — WORDS[negative] would crash the app on load.
   const specialDaysCount = countSpecialOccasionsBetweenDates(epoch, start)
-  const regularWordIndex = (day - specialDaysCount) % WORDS.length
+  const regularWordIndex =
+    (((day - specialDaysCount) % WORDS.length) + WORDS.length) % WORDS.length
 
   return {
     solution: WORDS[regularWordIndex].toUpperCase(),

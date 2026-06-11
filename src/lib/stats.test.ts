@@ -82,3 +82,14 @@ describe('addStatsForCompletedGame — wins with solve time', () => {
     expect(stats.bestTimeMs).toBeUndefined()
   })
 })
+
+describe('addStatsForCompletedGame — immutability', () => {
+  test('does not mutate the input stats object or its winDistribution array', () => {
+    const input = emptyStats()
+    const inputDistribution = input.winDistribution
+    addStatsForCompletedGame(input, 2)
+    expect(input.totalGames).toBe(0)
+    expect(input.currentStreak).toBe(0)
+    expect(inputDistribution).toEqual([0, 0, 0, 0, 0, 0])
+  })
+})

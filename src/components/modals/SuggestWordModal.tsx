@@ -26,10 +26,13 @@ export const SuggestWordModal = ({ isOpen, handleClose }: Props) => {
       body: JSON.stringify({ value: word }),
     })
       .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`)
+        }
         alert('Riječ je uspješno poslana!')
         setWord('')
       })
-      .catch((error) => {
+      .catch(() => {
         alert('Desio se problemčić, pokušaj kasnije!')
       })
   }

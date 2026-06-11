@@ -1,12 +1,11 @@
 import {
   ChartBarIcon,
+  CogIcon,
   InformationCircleIcon,
   PlusCircleIcon,
-  RefreshIcon,
-  SunIcon,
 } from '@heroicons/react/outline'
 import Plausible from 'plausible-tracker'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { Alert } from './components/alerts/Alert'
 import { SnowfallOverlay } from './components/effects/SnowfallOverlay'
@@ -14,6 +13,7 @@ import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
 import { InfoModal } from './components/modals/InfoModal'
+import { SettingsModal } from './components/modals/SettingsModal'
 import { StatsModal } from './components/modals/StatsModal'
 import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import { PravopisLinkModal } from './components/modals/PravopisLinkModal'
@@ -25,6 +25,7 @@ import {
   GAME_COPIED_MESSAGE,
   GAME_TITLE,
   NOT_ENOUGH_LETTERS_MESSAGE,
+  SETTINGS_TITLE,
   SOLVE_TIME_TEXT,
   WIN_MESSAGES,
   WORD_NOT_FOUND_MESSAGE,
@@ -53,6 +54,12 @@ import { isWinningWord, isWordInWordList, solution } from './lib/words'
 
 const ALERT_TIME_MS = 3000
 
+// Module-level so the tracker isn't re-instantiated on every render.
+const plausible = Plausible({
+  domain: 'elahmo.github.io',
+  apiHost: 'https://plausible.novalic.xyz',
+})
+
 const isWinterThemeActive = (date: Date) => {
   const month = date.getMonth() // 0-indexed
   const day = date.getDate()
@@ -76,6 +83,7 @@ function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isSuggestWordModalOpen, setIsSuggestWordModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
@@ -127,11 +135,6 @@ function App() {
   const [isTabHidden, setIsTabHidden] = useState(
     typeof document !== 'undefined' ? document.hidden : false
   )
-
-  const plausible = Plausible({
-    domain: 'elahmo.github.io',
-    apiHost: 'https://plausible.novalic.xyz',
-  })
 
   const shouldShowPravopisLink = () => {
     // Temporarily disable Pravopis banner
@@ -202,6 +205,7 @@ function App() {
     isAboutModalOpen ||
     isStatsModalOpen ||
     isSuggestWordModalOpen ||
+    isSettingsModalOpen ||
     isConsentModalVisible
   const shouldPauseTimer = anyModalOpen || isTabHidden
 
@@ -243,12 +247,30 @@ function App() {
     setTodaySolveTimeMs(null)
   }
 
+  const handleTimeTracking = (enabled: boolean) => {
+    if (enabled) {
+      handleEnableTimeTracking()
+    } else {
+      handleDisableTimeTracking()
+    }
+  }
+
   useEffect(() => {
     saveGameStateToLocalStorage({ guesses, solution })
   }, [guesses])
 
+  // Fire the end-of-game celebration exactly once. The effect also depends on
+  // todaySolveTimeMs (for the time suffix), which can now change after the
+  // game ends — toggling time tracking in Settings — and must not replay the
+  // alert or reopen the stats modal.
+  const gameEndAlertFiredRef = useRef(false)
+
   useEffect(() => {
+    if (gameEndAlertFiredRef.current) {
+      return
+    }
     if (isGameWon) {
+      gameEndAlertFiredRef.current = true
       const baseMsg =
         WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)]
       const finalMs = todaySolveTimeMs ?? getFinalTime()
@@ -263,6 +285,7 @@ function App() {
       }, ALERT_TIME_MS)
     }
     if (isGameLost) {
+      gameEndAlertFiredRef.current = true
       setTimeout(() => {
         setIsStatsModalOpen(true)
       }, ALERT_TIME_MS)
@@ -384,14 +407,6 @@ function App() {
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsSuggestWordModalOpen(true)}
         />
-        <SunIcon
-          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
-          onClick={() => handleDarkMode(!isDarkMode)}
-        />
-        <RefreshIcon
-          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
-          onClick={() => window.location.reload()}
-        />
         <InformationCircleIcon
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsInfoModalOpen(true)}
@@ -399,6 +414,11 @@ function App() {
         <ChartBarIcon
           className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
           onClick={() => setIsStatsModalOpen(true)}
+        />
+        <CogIcon
+          className="h-5 w-5 mr-2 cursor-pointer dark:stroke-white"
+          aria-label={SETTINGS_TITLE}
+          onClick={() => setIsSettingsModalOpen(true)}
         />
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} />
@@ -450,6 +470,15 @@ function App() {
         isOpen={isConsentModalVisible}
         handleEnable={handleEnableTimeTracking}
         handleDisable={handleDisableTimeTracking}
+      />
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        handleClose={() => setIsSettingsModalOpen(false)}
+        isDarkMode={isDarkMode}
+        handleDarkMode={handleDarkMode}
+        isTimeTrackingEnabled={isTimeTrackingEnabled}
+        handleTimeTracking={handleTimeTracking}
+        handleRefresh={() => window.location.reload()}
       />
 
       <button

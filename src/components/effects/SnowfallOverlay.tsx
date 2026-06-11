@@ -29,9 +29,7 @@ type Props = {
 export const SnowfallOverlay = ({ isDarkMode }: Props) => {
   const prefersReducedMotion = usePrefersReducedMotion()
 
-  const color = isDarkMode
-    ? 'rgba(255,255,255,0.9)'
-    : 'rgba(140,170,200,0.7)' // bluish-gray for visibility on light backgrounds
+  const color = isDarkMode ? 'rgba(255,255,255,0.9)' : 'rgba(140,170,200,0.7)' // bluish-gray for visibility on light backgrounds
 
   const style = useMemo<React.CSSProperties>(
     () => ({

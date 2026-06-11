@@ -47,13 +47,14 @@ export const saveTimeTrackingPreferenceToLocalStorage = (
   localStorage.setItem(timeTrackingPreferenceKey, JSON.stringify(preference))
 }
 
-export const loadTimeTrackingPreferenceFromLocalStorage = (): TimeTrackingPreference | null => {
-  const raw = localStorage.getItem(timeTrackingPreferenceKey)
-  if (!raw) return null
-  try {
-    const parsed = JSON.parse(raw) as unknown
-    return parsed === 'on' || parsed === 'off' ? parsed : null
-  } catch {
-    return null
+export const loadTimeTrackingPreferenceFromLocalStorage =
+  (): TimeTrackingPreference | null => {
+    const raw = localStorage.getItem(timeTrackingPreferenceKey)
+    if (!raw) return null
+    try {
+      const parsed = JSON.parse(raw) as unknown
+      return parsed === 'on' || parsed === 'off' ? parsed : null
+    } catch {
+      return null
+    }
   }
-}

@@ -14,11 +14,14 @@ export const Grid = ({ guesses, currentGuess }: Props) => {
   return (
     <div className="pb-2 relative">
       <div className="p-4 relative overflow-hidden">
-        <div className="sparkle" style={{top: '10px', left: '20px'}}></div>
-        <div className="sparkle" style={{top: '30px', right: '25px'}}></div>
-        <div className="sparkle" style={{bottom: '15px', left: '30px'}}></div>
-        <div className="sparkle" style={{bottom: '25px', right: '15px'}}></div>
-        <div className="sparkle" style={{top: '50%', left: '10px'}}></div>
+        <div className="sparkle" style={{ top: '10px', left: '20px' }}></div>
+        <div className="sparkle" style={{ top: '30px', right: '25px' }}></div>
+        <div className="sparkle" style={{ bottom: '15px', left: '30px' }}></div>
+        <div
+          className="sparkle"
+          style={{ bottom: '25px', right: '15px' }}
+        ></div>
+        <div className="sparkle" style={{ top: '50%', left: '10px' }}></div>
         {guesses.map((guess, i) => (
           <CompletedRow key={i} guess={guess} />
         ))}

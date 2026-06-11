@@ -64,7 +64,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!(react-snowfall)/)"
+      "node_modules/(?!(\\.pnpm|react-snowfall)/)"
     ]
   }
 }

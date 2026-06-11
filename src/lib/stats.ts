@@ -12,7 +12,12 @@ export const addStatsForCompletedGame = (
   solveTimeMs: number | null = null
 ) => {
   // Count is number of incorrect guesses before end.
-  const stats = { ...gameStats }
+  // Copy the array too — a shallow spread would let the increment below
+  // mutate the winDistribution still referenced by React state.
+  const stats = {
+    ...gameStats,
+    winDistribution: [...gameStats.winDistribution],
+  }
 
   stats.totalGames += 1
 

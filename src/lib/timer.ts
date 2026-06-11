@@ -110,7 +110,8 @@ export const getFinalTime = (): number | null => {
   return state.stored.accumulatedMs
 }
 
-export const getElapsed = (): number => (state === null ? 0 : computeElapsed(state))
+export const getElapsed = (): number =>
+  state === null ? 0 : computeElapsed(state)
 
 export const formatTime = (ms: number): string => {
   const totalSec = Math.floor(Math.max(0, ms) / 1000)
@@ -118,7 +119,10 @@ export const formatTime = (ms: number): string => {
   const min = Math.floor(totalSec / 60)
   if (min >= 60) {
     const hr = Math.floor(min / 60)
-    return `${hr}:${String(min % 60).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+    return `${hr}:${String(min % 60).padStart(2, '0')}:${String(sec).padStart(
+      2,
+      '0'
+    )}`
   }
   return `${min}:${String(sec).padStart(2, '0')}`
 }
