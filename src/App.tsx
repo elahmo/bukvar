@@ -9,6 +9,10 @@ import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { Alert } from './components/alerts/Alert'
 import { SnowfallOverlay } from './components/effects/SnowfallOverlay'
+import {
+  FootballOverlay,
+  FootballPitchBackground,
+} from './components/effects/FootballOverlay'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
@@ -51,6 +55,7 @@ import {
   startTimer,
 } from './lib/timer'
 import { isWinningWord, isWordInWordList, solution } from './lib/words'
+import { isWorldCupActive } from './lib/worldCup'
 
 const ALERT_TIME_MS = 3000
 
@@ -219,6 +224,7 @@ function App() {
   }, [shouldPauseTimer, isTimeTrackingEnabled])
 
   const winterThemeActive = isWinterThemeActive(new Date())
+  const worldCupActive = isWorldCupActive(new Date())
 
   useEffect(() => {
     if (winterThemeActive) {
@@ -372,6 +378,8 @@ function App() {
   return (
     <div className="py-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
       {winterThemeActive && <SnowfallOverlay isDarkMode={isDarkMode} />}
+      {worldCupActive && <FootballPitchBackground isDarkMode={isDarkMode} />}
+      {worldCupActive && <FootballOverlay />}
       <div className="flex w-80 mx-auto items-center mb-2 mt-2">
         <h1 className="text-xl ml-2.5 grow font-bold dark:text-white relative">
           {winterThemeActive && (
