@@ -1,5 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import { FootballOverlay, FootballPitchBackground } from './FootballOverlay'
+import {
+  FootballOverlay,
+  FootballPitchBackground,
+  buildPitchStyle,
+} from './FootballOverlay'
 
 const mockMatchMedia = (matches: boolean) => {
   Object.defineProperty(window, 'matchMedia', {
@@ -33,14 +37,27 @@ describe('FootballOverlay (kickable ball)', () => {
   })
 })
 
-describe('FootballPitchBackground', () => {
-  test('renders a decorative pitch SVG in light mode', () => {
-    const { container } = render(<FootballPitchBackground isDarkMode={false} />)
-    expect(container.querySelector('svg')).toBeInTheDocument()
+describe('buildPitchStyle', () => {
+  test('layers an SVG pitch over grass stripes', () => {
+    const style = buildPitchStyle(false)
+    expect(style.backgroundImage).toContain('data:image/svg+xml')
+    expect(style.backgroundImage).toContain('svg')
+    expect(style.backgroundImage).toContain('repeating-linear-gradient')
   })
 
-  test('renders a decorative pitch SVG in dark mode', () => {
-    const { container } = render(<FootballPitchBackground isDarkMode={true} />)
-    expect(container.querySelector('svg')).toBeInTheDocument()
+  test('uses white markings in dark mode and pitch-green in light mode', () => {
+    // rgba() commas are percent-encoded (%2C) inside the data URI.
+    expect(buildPitchStyle(true).backgroundImage).toContain('255%2C255%2C255')
+    expect(buildPitchStyle(false).backgroundImage).toContain('20%2C83%2C45')
+  })
+})
+
+describe('FootballPitchBackground', () => {
+  // The pitch is painted onto document.body (the page "canvas") rather than a
+  // fixed overlay, which avoids an iOS Safari stale-paint band near the bottom
+  // toolbar. The component therefore renders no DOM of its own.
+  test('renders no DOM of its own', () => {
+    const { container } = render(<FootballPitchBackground isDarkMode={false} />)
+    expect(container).toBeEmptyDOMElement()
   })
 })

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Mirrors the hook in SnowfallOverlay: respect the user's motion preference and
 // react to changes at runtime.
@@ -27,54 +27,76 @@ type PitchProps = {
   isDarkMode: boolean
 }
 
-// A very subtle, static football pitch drawn behind the board. It carries no
-// animation, so it's safe to show even under prefers-reduced-motion. It sits at
-// z-index -1 (above the page background, below the game UI) and never
-// intercepts pointer input. Colors flip with the theme, just like SnowfallOverlay.
-export const FootballPitchBackground = ({ isDarkMode }: PitchProps) => {
-  const line = isDarkMode ? 'rgba(255,255,255,0.55)' : 'rgba(20,83,45,0.6)'
+// A very subtle, static football pitch painted as the page background during
+// the World Cup window. We set it on document.body (the page "canvas") rather
+// than a position:fixed overlay: on iOS Safari a fixed full-screen layer leaves
+// a stale-colored band in the dynamic-toolbar gap at the bottom of the screen
+// (it only repaints once something else on the page does). A canvas background
+// has no compositing layer, always paints, and fills the whole viewport — so no
+// band. It carries no animation, so it's fine under prefers-reduced-motion.
+// Colors flip with the theme, just like SnowfallOverlay.
+// Builds the body-background CSS for the pitch. Exported so the styling logic
+// (theme colors, markings) can be unit-tested without a real CSSOM — jsdom
+// silently drops complex multi-layer background-image values.
+export const buildPitchStyle = (isDarkMode: boolean) => {
+  const line = isDarkMode ? 'rgba(255,255,255,0.14)' : 'rgba(20,83,45,0.16)'
   const grass = isDarkMode ? 'rgba(74,222,128,0.035)' : 'rgba(34,139,34,0.05)'
 
-  const containerStyle = useMemo<React.CSSProperties>(
-    () => ({
-      position: 'fixed',
-      inset: 0,
-      zIndex: -1,
-      pointerEvents: 'none',
-      // faint "mown grass" stripes
-      backgroundImage: `repeating-linear-gradient(90deg, transparent 0 70px, ${grass} 70px 140px)`,
-    }),
-    [grass]
-  )
+  // Pitch markings as an inline SVG; encoded into a data: URI so it can be a
+  // background-image. preserveAspectRatio="slice" + background-size:cover keeps
+  // the circle round while filling the screen.
+  const svg = [
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid slice'>`,
+    `<g fill='none' stroke='${line}' stroke-width='2'>`,
+    `<rect x='20' y='20' width='1010' height='640'/>`,
+    `<line x1='525' y1='20' x2='525' y2='660'/>`,
+    `<circle cx='525' cy='340' r='90'/>`,
+    `<rect x='20' y='180' width='150' height='320'/>`,
+    `<rect x='20' y='260' width='55' height='160'/>`,
+    `<rect x='880' y='180' width='150' height='320'/>`,
+    `<rect x='975' y='260' width='55' height='160'/>`,
+    `</g>`,
+    `<circle cx='525' cy='340' r='4' fill='${line}'/>`,
+    `</svg>`,
+  ].join('')
 
-  return (
-    <div style={containerStyle} aria-hidden="true">
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 1050 680"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        stroke={line}
-        strokeWidth="2"
-        style={{ opacity: 0.16 }}
-      >
-        {/* touchlines */}
-        <rect x="20" y="20" width="1010" height="640" />
-        {/* halfway line */}
-        <line x1="525" y1="20" x2="525" y2="660" />
-        {/* center circle + spot */}
-        <circle cx="525" cy="340" r="90" />
-        <circle cx="525" cy="340" r="4" fill={line} stroke="none" />
-        {/* left penalty area + six-yard box */}
-        <rect x="20" y="180" width="150" height="320" />
-        <rect x="20" y="260" width="55" height="160" />
-        {/* right penalty area + six-yard box */}
-        <rect x="880" y="180" width="150" height="320" />
-        <rect x="975" y="260" width="55" height="160" />
-      </svg>
-    </div>
-  )
+  const pitch = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+  // faint "mown grass" stripes
+  const stripes = `repeating-linear-gradient(90deg, transparent 0 70px, ${grass} 70px 140px)`
+
+  return {
+    backgroundImage: `${pitch}, ${stripes}`,
+    backgroundSize: 'cover, auto',
+    backgroundPosition: 'center, top left',
+    backgroundRepeat: 'no-repeat, repeat',
+  }
+}
+
+export const FootballPitchBackground = ({ isDarkMode }: PitchProps) => {
+  useEffect(() => {
+    const next = buildPitchStyle(isDarkMode)
+    const body = document.body
+    const prev = {
+      backgroundImage: body.style.backgroundImage,
+      backgroundSize: body.style.backgroundSize,
+      backgroundPosition: body.style.backgroundPosition,
+      backgroundRepeat: body.style.backgroundRepeat,
+    }
+
+    body.style.backgroundImage = next.backgroundImage
+    body.style.backgroundSize = next.backgroundSize
+    body.style.backgroundPosition = next.backgroundPosition
+    body.style.backgroundRepeat = next.backgroundRepeat
+
+    return () => {
+      body.style.backgroundImage = prev.backgroundImage
+      body.style.backgroundSize = prev.backgroundSize
+      body.style.backgroundPosition = prev.backgroundPosition
+      body.style.backgroundRepeat = prev.backgroundRepeat
+    }
+  }, [isDarkMode])
+
+  return null
 }
 
 // The kickable football: a single draggable element with lightweight rAF
@@ -263,7 +285,10 @@ export const FootballOverlay = () => {
         textAlign: 'center',
         touchAction: 'none',
         userSelect: 'none',
-        willChange: 'transform',
+        // NB: intentionally no `will-change: transform` here — leaving it on a
+        // position:fixed element permanently triggers an iOS Safari repaint
+        // glitch (a stale band near the bottom toolbar). The rAF loop only runs
+        // while the ball moves, so the transform is composited fine without it.
         filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.35))',
       }}
     >
