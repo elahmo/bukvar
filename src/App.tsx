@@ -13,6 +13,7 @@ import {
   FootballOverlay,
   FootballPitchBackground,
 } from './components/effects/FootballOverlay'
+import { ConfettiCannons } from './components/effects/ConfettiCannons'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
@@ -56,6 +57,7 @@ import {
 } from './lib/timer'
 import { isWinningWord, isWordInWordList, solution } from './lib/words'
 import { isWorldCupActive } from './lib/worldCup'
+import { getCelebrationForDate } from './constants/specialOccasions'
 
 const ALERT_TIME_MS = 3000
 
@@ -100,6 +102,8 @@ function App() {
       : false
   )
   const [successAlert, setSuccessAlert] = useState('')
+  // Incrementing this fires a volley from <ConfettiCannons> (Bosna victory day).
+  const [confettiFire, setConfettiFire] = useState(0)
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
     if (loaded == null) {
@@ -225,6 +229,19 @@ function App() {
 
   const winterThemeActive = isWinterThemeActive(new Date())
   const worldCupActive = isWorldCupActive(new Date())
+  const isVictoryDay = getCelebrationForDate(new Date()) === 'bosnia-victory'
+
+  // Everyone gets one volley on the first open of the victory day. Guarded per
+  // day per browser so a refresh doesn't re-blast; the on-win volley below
+  // fires independently for players who actually solve it.
+  useEffect(() => {
+    if (!isVictoryDay) return
+    const key = `victoryCelebrationShown:${new Date().toDateString()}`
+    if (localStorage.getItem(key)) return
+    localStorage.setItem(key, '1')
+    const t = setTimeout(() => setConfettiFire((c) => c + 1), 700)
+    return () => clearTimeout(t)
+  }, [isVictoryDay])
 
   useEffect(() => {
     if (winterThemeActive) {
@@ -277,6 +294,9 @@ function App() {
     }
     if (isGameWon) {
       gameEndAlertFiredRef.current = true
+      if (isVictoryDay) {
+        setConfettiFire((c) => c + 1)
+      }
       const baseMsg =
         WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)]
       const finalMs = todaySolveTimeMs ?? getFinalTime()
@@ -296,7 +316,7 @@ function App() {
         setIsStatsModalOpen(true)
       }, ALERT_TIME_MS)
     }
-  }, [isGameWon, isGameLost, todaySolveTimeMs])
+  }, [isGameWon, isGameLost, todaySolveTimeMs, isVictoryDay])
 
   const onChar = (value: string) => {
     if (isConsentPending) return
@@ -380,6 +400,7 @@ function App() {
       {winterThemeActive && <SnowfallOverlay isDarkMode={isDarkMode} />}
       {worldCupActive && <FootballPitchBackground isDarkMode={isDarkMode} />}
       {worldCupActive && <FootballOverlay />}
+      {isVictoryDay && <ConfettiCannons fire={confettiFire} />}
       <div className="flex w-80 mx-auto items-center mb-2 mt-2">
         <h1 className="text-xl ml-2.5 grow font-bold dark:text-white relative">
           {winterThemeActive && (

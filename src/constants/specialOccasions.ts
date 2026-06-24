@@ -3,6 +3,9 @@ export interface SpecialOccasion {
   date: { month: number; day: number } // month is 0-indexed (January = 0)
   word: string
   year?: number // optional, if specified only applies to that year
+  // Optional on-screen celebration to play that day (see ConfettiCannons).
+  // Only 'bosnia-victory' exists today; left as a string union for future ones.
+  celebration?: 'bosnia-victory'
 }
 
 export const SPECIAL_OCCASIONS: SpecialOccasion[] = [
@@ -24,7 +27,22 @@ export const SPECIAL_OCCASIONS: SpecialOccasion[] = [
     year: 2026,
     word: 'ponos',
   },
+  {
+    // Bosna's World Cup win over Katar — flag-coloured confetti cannons fire on
+    // open and again when the player solves the word (see ConfettiCannons).
+    name: 'Pobjeda',
+    date: { month: 5, day: 25 }, // June 25th
+    year: 2026,
+    word: 'BOSNA',
+    celebration: 'bosnia-victory',
+  },
 ]
+
+// The celebration to play today, if any (drives ConfettiCannons in App).
+export const getCelebrationForDate = (
+  date: Date
+): SpecialOccasion['celebration'] | undefined =>
+  getSpecialOccasionForDate(date)?.celebration
 
 export const getSpecialOccasionForDate = (
   date: Date
