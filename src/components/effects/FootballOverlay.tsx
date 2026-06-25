@@ -43,30 +43,36 @@ export const buildPitchStyle = (isDarkMode: boolean) => {
   const grass = isDarkMode ? 'rgba(74,222,128,0.035)' : 'rgba(34,139,34,0.05)'
 
   // Pitch markings as an inline SVG; encoded into a data: URI so it can be a
-  // background-image. preserveAspectRatio="slice" + background-size:cover keeps
-  // the circle round while filling the screen.
+  // background-image. The pitch is drawn VERTICALLY (portrait): the goal /
+  // penalty boxes sit at the top and bottom and the halfway line runs across the
+  // middle. We stretch it to fill the viewport (preserveAspectRatio="none" +
+  // background-size:100% 100%) so the field's width always matches the screen
+  // and BOTH goals stay on-screen — even on narrow phones, where the old
+  // landscape pitch (cover) cropped the left/right goals out of view. The
+  // trade-off is the centre circle renders as an ellipse on non-square screens,
+  // which is imperceptible at these faint opacities.
   const svg = [
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid slice'>`,
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 680 1050' preserveAspectRatio='none'>`,
     `<g fill='none' stroke='${line}' stroke-width='2'>`,
-    `<rect x='20' y='20' width='1010' height='640'/>`,
-    `<line x1='525' y1='20' x2='525' y2='660'/>`,
-    `<circle cx='525' cy='340' r='90'/>`,
-    `<rect x='20' y='180' width='150' height='320'/>`,
-    `<rect x='20' y='260' width='55' height='160'/>`,
-    `<rect x='880' y='180' width='150' height='320'/>`,
-    `<rect x='975' y='260' width='55' height='160'/>`,
+    `<rect x='20' y='20' width='640' height='1010'/>`,
+    `<line x1='20' y1='525' x2='660' y2='525'/>`,
+    `<circle cx='340' cy='525' r='90'/>`,
+    `<rect x='180' y='20' width='320' height='150'/>`,
+    `<rect x='260' y='20' width='160' height='55'/>`,
+    `<rect x='180' y='880' width='320' height='150'/>`,
+    `<rect x='260' y='975' width='160' height='55'/>`,
     `</g>`,
-    `<circle cx='525' cy='340' r='4' fill='${line}'/>`,
+    `<circle cx='340' cy='525' r='4' fill='${line}'/>`,
     `</svg>`,
   ].join('')
 
   const pitch = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
-  // faint "mown grass" stripes
-  const stripes = `repeating-linear-gradient(90deg, transparent 0 70px, ${grass} 70px 140px)`
+  // faint "mown grass" stripes — horizontal bands, across the vertical pitch
+  const stripes = `repeating-linear-gradient(0deg, transparent 0 70px, ${grass} 70px 140px)`
 
   return {
     backgroundImage: `${pitch}, ${stripes}`,
-    backgroundSize: 'cover, auto',
+    backgroundSize: '100% 100%, auto',
     backgroundPosition: 'center, top left',
     backgroundRepeat: 'no-repeat, repeat',
   }
