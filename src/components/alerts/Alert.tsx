@@ -17,6 +17,10 @@ export const Alert = ({ isOpen, message, variant = 'warning' }: Props) => {
     }
   )
 
+  // Render each "\n"-separated part on its own line via explicit <br />, so a
+  // multi-line message doesn't depend on a CSS white-space utility being present.
+  const lines = message.split('\n')
+
   return (
     <Transition
       show={isOpen}
@@ -30,8 +34,13 @@ export const Alert = ({ isOpen, message, variant = 'warning' }: Props) => {
     >
       <div className={classes}>
         <div className="p-4">
-          <p className="text-sm text-center font-medium text-gray-900 whitespace-pre-line">
-            {message}
+          <p className="text-sm text-center font-medium text-gray-900">
+            {lines.map((line, i) => (
+              <Fragment key={i}>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))}
           </p>
         </div>
       </div>
