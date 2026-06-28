@@ -63,10 +63,17 @@ import {
   startTimer,
 } from './lib/timer'
 import { isWinningWord, isWordInWordList, solution } from './lib/words'
+import { WORD_DEFINITIONS } from './constants/wordDefinitions'
+import { WordMeaning } from './components/WordMeaning'
 import { isWorldCupActive } from './lib/worldCup'
 import { getCelebrationForDate } from './constants/specialOccasions'
 
 const ALERT_TIME_MS = 3000
+
+// Today's definition, if we have one. Drives the post-game "Značenje" card that
+// replaces the keyboard, and a small extra delay before the stats modal so the
+// card is readable first. Undefined for words not yet defined (card is skipped).
+const todayMeaning = WORD_DEFINITIONS[solution.toLowerCase()]
 
 // Module-level so the tracker isn't re-instantiated on every render.
 const plausible = Plausible({
@@ -370,16 +377,20 @@ function App() {
         winMsg += `\n${COMMUNITY_FASTER_SHORT(pct)}`
       }
       setSuccessAlert(winMsg)
-      setTimeout(() => {
-        setSuccessAlert('')
-        setIsStatsModalOpen(true)
-      }, ALERT_TIME_MS)
+      // Clear the win banner on schedule, but give the "Značenje" card an extra
+      // ~1.5s in view before the stats modal covers it (only if defined today).
+      setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)
+      setTimeout(
+        () => setIsStatsModalOpen(true),
+        ALERT_TIME_MS + (todayMeaning ? 1500 : 0)
+      )
     }
     if (isGameLost) {
       gameEndAlertFiredRef.current = true
-      setTimeout(() => {
-        setIsStatsModalOpen(true)
-      }, ALERT_TIME_MS)
+      setTimeout(
+        () => setIsStatsModalOpen(true),
+        ALERT_TIME_MS + (todayMeaning ? 1500 : 0)
+      )
     }
   }, [isGameWon, isGameLost, todaySolveTimeMs, isVictoryDay, community])
 
@@ -516,16 +527,20 @@ function App() {
         />
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} />
-      <Keyboard
-        onChar={onChar}
-        onDelete={onDelete}
-        onEnter={onEnter}
-        guesses={guesses}
-        isSuggestWordModalOpen={isSuggestWordModalOpen}
-        isConsentModalOpen={isConsentPending}
-        showSnow={winterThemeActive}
-        isDarkMode={isDarkMode}
-      />
+      {(isGameWon || isGameLost) && todayMeaning ? (
+        <WordMeaning word={solution} entry={todayMeaning} />
+      ) : (
+        <Keyboard
+          onChar={onChar}
+          onDelete={onDelete}
+          onEnter={onEnter}
+          guesses={guesses}
+          isSuggestWordModalOpen={isSuggestWordModalOpen}
+          isConsentModalOpen={isConsentPending}
+          showSnow={winterThemeActive}
+          isDarkMode={isDarkMode}
+        />
+      )}
       <InfoModal
         isOpen={isInfoModalOpen}
         handleClose={() => setIsInfoModalOpen(false)}

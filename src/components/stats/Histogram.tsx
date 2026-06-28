@@ -23,13 +23,13 @@ export const Histogram = ({ gameStats, community, highlightIndex }: Props) => {
   const maxPct = Math.max(...yourPct, ...(commPct ?? [0]), 1)
 
   return (
-    <div className="columns-1 justify-left m-2 text-sm dark:text-white">
+    <div className="columns-1 justify-left mx-2 my-1 text-sm dark:text-white">
       {yourDist.map((value, i) => (
         <Progress
           key={i}
           index={i}
-          size={90 * (yourPct[i] / maxPct)}
-          ghostSize={commPct ? 90 * (commPct[i] / maxPct) : undefined}
+          size={80 * (yourPct[i] / maxPct)}
+          ghostSize={commPct ? 80 * (commPct[i] / maxPct) : undefined}
           highlight={highlightIndex === i}
           label={String(value)}
         />

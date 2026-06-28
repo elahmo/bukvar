@@ -46,6 +46,11 @@ export type WordDefinition = {
 
 // Sample only — random 10 from the approved list, for style alignment.
 export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
+  // Today's word (Bukvar 913, the legacy list) — so the card shows on launch eve too.
+  pumpa: {
+    def: 'Naprava za potiskivanje ili crpljenje tekućine, plina ili zraka.',
+    pos: 'imenica, ž.',
+  },
   nemar: {
     def: 'Nedostatak brige ili pažnje; nehaj.',
     pos: 'imenica, m.',

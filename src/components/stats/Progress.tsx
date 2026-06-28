@@ -10,7 +10,7 @@ type Props = {
 
 export const Progress = ({ index, size, label, ghostSize, highlight }: Props) => {
   return (
-    <div className="flex justify-left m-1 items-center">
+    <div className="flex justify-left mx-1 my-0.5 items-center">
       <div
         className={classNames('items-center justify-center w-2', {
           'text-orange-500 font-bold': highlight,

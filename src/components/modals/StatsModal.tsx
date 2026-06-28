@@ -5,7 +5,6 @@ import { CommunitySection } from '../stats/CommunitySection'
 import { GameStats } from '../../lib/localStorage'
 import { CommunityStats } from '../../lib/community'
 import { shareStatus } from '../../lib/share'
-import { formatTime } from '../../lib/timer'
 import { tomorrow } from '../../lib/words'
 import { BaseModal } from './BaseModal'
 import {
@@ -13,7 +12,6 @@ import {
   GUESS_DISTRIBUTION_TEXT,
   NEW_WORD_TEXT,
   SHARE_TEXT,
-  TODAY_TIME_TEXT,
   COMMUNITY_LEGEND_YOU,
   COMMUNITY_LEGEND_TODAY,
   COMMUNITY_LEGEND_ALL,
@@ -77,6 +75,7 @@ export const StatsModal = ({
         <StatBar
           gameStats={gameStats}
           isTimeTrackingEnabled={isTimeTrackingEnabled}
+          todaySolveTimeMs={todaySolveTimeMs}
         />
         {community && (
           <CommunitySection
@@ -94,8 +93,9 @@ export const StatsModal = ({
       <StatBar
         gameStats={gameStats}
         isTimeTrackingEnabled={isTimeTrackingEnabled}
+        todaySolveTimeMs={todaySolveTimeMs}
       />
-      <h4 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+      <h4 className="text-base leading-5 font-medium text-gray-900 dark:text-gray-100">
         {GUESS_DISTRIBUTION_TEXT}
       </h4>
       <Histogram
@@ -106,15 +106,7 @@ export const StatsModal = ({
       {community && <Legend />}
       {(isGameLost || isGameWon) && (
         <>
-          {isGameWon && todaySolveTimeMs !== null && (
-            <div className="mt-3 text-center dark:text-white">
-              <span className="text-sm">{TODAY_TIME_TEXT}: </span>
-              <span className="text-lg font-medium">
-                {formatTime(todaySolveTimeMs)}
-              </span>
-            </div>
-          )}
-          <div className="mt-5 sm:mt-6 columns-2 dark:text-white">
+          <div className="mt-2 columns-2 dark:text-white">
             <div>
               <h5>{NEW_WORD_TEXT}</h5>
               <Countdown

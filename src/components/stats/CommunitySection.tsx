@@ -102,7 +102,8 @@ export const CommunitySection = ({
       <div className="text-center text-sm font-medium text-blue-600 dark:text-blue-300 mt-1">
         {pct != null && todaySolveTimeMs != null ? (
           <>
-            Ti: <b>{formatTime(todaySolveTimeMs)}</b> · {COMMUNITY_FASTER_TEXT(pct)}
+            Tvoje vrijeme: <b>{formatTime(todaySolveTimeMs)}</b> ·{' '}
+            {COMMUNITY_FASTER_TEXT(pct)}
           </>
         ) : (
           <span className="text-gray-500">{COMMUNITY_TIME_OFF_TEXT}</span>
