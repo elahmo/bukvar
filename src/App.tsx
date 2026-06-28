@@ -24,6 +24,7 @@ import { SuggestWordModal } from './components/modals/SuggestWordModal'
 import { PravopisLinkModal } from './components/modals/PravopisLinkModal'
 import { TimeTrackingConsentModal } from './components/modals/TimeTrackingConsentModal'
 import { WomensDayModal } from './components/modals/WomensDayModal'
+import { WordlistUpdateModal } from './components/modals/WordlistUpdateModal'
 import {
   ABOUT_GAME_MESSAGE,
   CORRECT_WORD_MESSAGE,
@@ -93,6 +94,12 @@ function App() {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isPravopisLinkModalOpen, setIsPravopisLinkModalOpen] = useState(false)
   const [isWomensDayModalOpen, setIsWomensDayModalOpen] = useState(false)
+  const [isWordlistUpdateModalOpen, setIsWordlistUpdateModalOpen] =
+    useState(false)
+  // True when the one-time "word list updated" notice is due but is waiting for
+  // the intro InfoModal to be dismissed first (so first-time players don't get
+  // two stacked modals).
+  const [announcementPending, setAnnouncementPending] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
@@ -174,6 +181,17 @@ function App() {
     return today.getMonth() === 2 && today.getDate() === 8 // March is month 2 (0-indexed)
   }
 
+  // One-time notice that the word list was relaunched (new randomized list from
+  // 2026-06-29). Shown once per user, and only during a ~2-week window so that
+  // players who join long after the change don't get a stale "updated" popup.
+  const shouldShowWordlistUpdate = () => {
+    if (localStorage.getItem('wordlistUpdateSeen')) return false
+    const now = new Date()
+    const start = new Date(2026, 5, 29) // 2026-06-29 (month is 0-indexed)
+    const end = new Date(2026, 6, 13, 23, 59, 59) // through 2026-07-13
+    return now >= start && now <= end
+  }
+
   useEffect(() => {
     if (shouldShowPravopisLink()) {
       setIsPravopisLinkModalOpen(true)
@@ -183,6 +201,12 @@ function App() {
     // Check if it's International Women's Day
     if (isInternationalWomensDay()) {
       setIsWomensDayModalOpen(true)
+    }
+
+    // Queue the one-time word-list-update notice (actual display is deferred to
+    // the watcher effect below so it never stacks on the intro InfoModal).
+    if (shouldShowWordlistUpdate()) {
+      setAnnouncementPending(true)
     }
 
     // Simple daily refresh check - only set up interval for long-running sessions
@@ -202,6 +226,17 @@ function App() {
 
     return () => clearInterval(midnightCheck)
   }, [])
+
+  // Show the deferred word-list-update notice once the intro InfoModal is gone
+  // (returning players: immediately; first-time players: after they close the
+  // intro). Marked seen on display so it only ever shows once.
+  useEffect(() => {
+    if (announcementPending && !isInfoModalOpen) {
+      setIsWordlistUpdateModalOpen(true)
+      setAnnouncementPending(false)
+      localStorage.setItem('wordlistUpdateSeen', '1')
+    }
+  }, [announcementPending, isInfoModalOpen])
 
   useEffect(() => {
     if (isDarkMode) {
@@ -232,6 +267,7 @@ function App() {
     isInfoModalOpen ||
     isPravopisLinkModalOpen ||
     isWomensDayModalOpen ||
+    isWordlistUpdateModalOpen ||
     isAboutModalOpen ||
     isStatsModalOpen ||
     isSuggestWordModalOpen ||
@@ -524,6 +560,10 @@ function App() {
       <WomensDayModal
         isOpen={isWomensDayModalOpen}
         handleClose={() => setIsWomensDayModalOpen(false)}
+      />
+      <WordlistUpdateModal
+        isOpen={isWordlistUpdateModalOpen}
+        handleClose={() => setIsWordlistUpdateModalOpen(false)}
       />
       <TimeTrackingConsentModal
         isOpen={isConsentModalVisible}

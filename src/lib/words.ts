@@ -1,4 +1,10 @@
-import { WORDS } from '../constants/wordlist'
+import { WORDS, LEGACY_WORDS } from '../constants/wordlist'
+
+// Day index (see getWordOfDay) of the first day that uses the new, curated &
+// randomized WORDS list: 2026-06-29 = "Bukvar 914". Earlier days keep the
+// original sequential mapping over LEGACY_WORDS so already-played puzzles
+// (including the live day 913 = PUMPA) are never retroactively changed.
+const LAUNCH_INDEX = 914
 import { VALIDGUESSES } from '../constants/validGuesses'
 import {
   getSpecialOccasionForDate,
@@ -9,6 +15,7 @@ export const isWordInWordList = (word: string) => {
   const specialWords = getSpecialOccasionWords()
   return (
     WORDS.includes(word.toLowerCase()) ||
+    LEGACY_WORDS.includes(word.toLowerCase()) ||
     VALIDGUESSES.includes(word.toLowerCase()) ||
     specialWords.includes(word.toLowerCase())
   )
@@ -18,6 +25,7 @@ export const isWordPresent = (word: string) => {
   const specialWords = getSpecialOccasionWords()
   return (
     WORDS.includes(word.toLowerCase()) ||
+    LEGACY_WORDS.includes(word.toLowerCase()) ||
     specialWords.includes(word.toLowerCase())
   )
 }
@@ -69,15 +77,40 @@ export const getWordOfDay = () => {
     }
   }
 
-  // Calculate regular word index by subtracting special occasion days.
-  // Double modulo keeps the index positive even if a device clock is set
-  // before the epoch — WORDS[negative] would crash the app on load.
-  const specialDaysCount = countSpecialOccasionsBetweenDates(epoch, start)
-  const regularWordIndex =
-    (((day - specialDaysCount) % WORDS.length) + WORDS.length) % WORDS.length
+  // --- Pre-relaunch days (day < LAUNCH_INDEX) --------------------------------
+  // Keep the original sequential mapping over LEGACY_WORDS. This is what was
+  // live before the relaunch, so the still-active day 913 (= PUMPA) and all
+  // historical puzzles resolve exactly as they always did. Double modulo keeps
+  // the index positive even if a device clock is set before the epoch.
+  if (day < LAUNCH_INDEX) {
+    const specialDaysCount = countSpecialOccasionsBetweenDates(epoch, start)
+    const legacyIndex =
+      (((day - specialDaysCount) % LEGACY_WORDS.length) + LEGACY_WORDS.length) %
+      LEGACY_WORDS.length
+    return {
+      solution: LEGACY_WORDS[legacyIndex].toUpperCase(),
+      solutionIndex: day,
+      tomorrow: nextday.getTime(),
+    }
+  }
+
+  // --- Relaunch onward (2026-06-29+) -----------------------------------------
+  // New curated, pre-shuffled WORDS list. Index from the launch day so day 914
+  // is WORDS[0]; subtract special-occasion days since launch so the shuffled
+  // sequence isn't skipped on days a special word takes over.
+  const launchDate = new Date(epoch)
+  launchDate.setDate(epoch.getDate() + LAUNCH_INDEX)
+  const specialDaysSinceLaunch = countSpecialOccasionsBetweenDates(
+    launchDate,
+    start
+  )
+  const wordIndex =
+    (((day - LAUNCH_INDEX - specialDaysSinceLaunch) % WORDS.length) +
+      WORDS.length) %
+    WORDS.length
 
   return {
-    solution: WORDS[regularWordIndex].toUpperCase(),
+    solution: WORDS[wordIndex].toUpperCase(),
     solutionIndex: day,
     tomorrow: nextday.getTime(),
   }
