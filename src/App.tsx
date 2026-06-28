@@ -331,7 +331,7 @@ function App() {
           ? fasterThanPercent(community, Math.round(finalMs / 1000))
           : null
       if (pct !== null) {
-        winMsg += ` ${COMMUNITY_FASTER_SHORT(pct)}`
+        winMsg += `\n${COMMUNITY_FASTER_SHORT(pct)}`
       }
       setSuccessAlert(winMsg)
       setTimeout(() => {

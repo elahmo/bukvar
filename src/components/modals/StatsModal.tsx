@@ -104,14 +104,6 @@ export const StatsModal = ({
         highlightIndex={highlightIndex}
       />
       {community && <Legend />}
-      {community && (
-        <CommunitySection
-          community={community}
-          todaySolveTimeMs={todaySolveTimeMs}
-          isTimeTrackingEnabled={isTimeTrackingEnabled}
-          justFinished={justFinished}
-        />
-      )}
       {(isGameLost || isGameWon) && (
         <>
           {isGameWon && todaySolveTimeMs !== null && (
@@ -143,6 +135,14 @@ export const StatsModal = ({
             </button>
           </div>
         </>
+      )}
+      {community && (
+        <CommunitySection
+          community={community}
+          todaySolveTimeMs={todaySolveTimeMs}
+          isTimeTrackingEnabled={isTimeTrackingEnabled}
+          justFinished={justFinished}
+        />
       )}
     </BaseModal>
   )
