@@ -34,6 +34,7 @@ import {
   SOLVE_TIME_TEXT,
   WIN_MESSAGES,
   WORD_NOT_FOUND_MESSAGE,
+  COMMUNITY_FASTER_SHORT,
 } from './constants/strings'
 import {
   loadGameStateFromLocalStorage,
@@ -43,6 +44,11 @@ import {
   TimeTrackingPreference,
 } from './lib/localStorage'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
+import {
+  CommunityStats,
+  fetchCommunityStats,
+  fasterThanPercent,
+} from './lib/community'
 import {
   bucketSolveTime,
   clearTimer,
@@ -123,6 +129,10 @@ function App() {
   })
 
   const [stats, setStats] = useState(() => loadStats())
+  // Community ("Današnji igrači bukvara") stats from the forms backend. Null
+  // until loaded, and stays null if the backend is unreachable — every consumer
+  // guards on it, so the game works fully without it.
+  const [community, setCommunity] = useState<CommunityStats | null>(null)
   const [timeTrackingPreference, setTimeTrackingPreference] =
     useState<TimeTrackingPreference | null>(() =>
       loadTimeTrackingPreferenceFromLocalStorage()
@@ -205,6 +215,17 @@ function App() {
     const handler = () => setIsTabHidden(document.hidden)
     document.addEventListener('visibilitychange', handler)
     return () => document.removeEventListener('visibilitychange', handler)
+  }, [])
+
+  // Load community stats once on mount (best-effort; stays null on failure).
+  useEffect(() => {
+    let active = true
+    fetchCommunityStats().then((c) => {
+      if (active) setCommunity(c)
+    })
+    return () => {
+      active = false
+    }
   }, [])
 
   const anyModalOpen =
@@ -300,11 +321,19 @@ function App() {
       const baseMsg =
         WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)]
       const finalMs = todaySolveTimeMs ?? getFinalTime()
-      setSuccessAlert(
+      let winMsg =
         finalMs !== null
           ? `${baseMsg} ${SOLVE_TIME_TEXT} ${formatTime(finalMs)}.`
           : baseMsg
-      )
+      // Best-effort community percentile, only if stats already loaded.
+      const pct =
+        community && finalMs !== null
+          ? fasterThanPercent(community, Math.round(finalMs / 1000))
+          : null
+      if (pct !== null) {
+        winMsg += ` ${COMMUNITY_FASTER_SHORT(pct)}`
+      }
+      setSuccessAlert(winMsg)
       setTimeout(() => {
         setSuccessAlert('')
         setIsStatsModalOpen(true)
@@ -316,7 +345,7 @@ function App() {
         setIsStatsModalOpen(true)
       }, ALERT_TIME_MS)
     }
-  }, [isGameWon, isGameLost, todaySolveTimeMs, isVictoryDay])
+  }, [isGameWon, isGameLost, todaySolveTimeMs, isVictoryDay, community])
 
   const onChar = (value: string) => {
     if (isConsentPending) return
@@ -474,6 +503,7 @@ function App() {
         isGameWon={isGameWon}
         todaySolveTimeMs={todaySolveTimeMs}
         isTimeTrackingEnabled={isTimeTrackingEnabled}
+        community={community}
         handleShare={() => {
           setSuccessAlert(GAME_COPIED_MESSAGE)
           return setTimeout(() => setSuccessAlert(''), ALERT_TIME_MS)

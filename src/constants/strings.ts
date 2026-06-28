@@ -54,6 +54,22 @@ export const TIME_TRACKING_CONSENT_HINT =
 export const TIME_TRACKING_CONSENT_ENABLE = 'Uključi mjerenje'
 export const TIME_TRACKING_CONSENT_DISABLE = 'Ne, hvala'
 
+// Community ("Današnji igrači bukvara") stats
+export const COMMUNITY_TITLE = 'Današnji igrači bukvara'
+export const COMMUNITY_PLAYED_TEXT = 'igralo danas'
+export const COMMUNITY_SOLVE_TIME_TEXT = 'Vrijeme rješavanja'
+export const COMMUNITY_AVG_TEXT = 'prosjek danas'
+export const COMMUNITY_FASTER_TEXT = (pct: number) =>
+  `brži/a si od ${pct}% igrača danas`
+export const COMMUNITY_FASTER_SHORT = (pct: number) => `⚡ Brži/a od ${pct}% danas!`
+export const COMMUNITY_TIME_OFF_TEXT =
+  'Uključi mjerenje vremena da vidiš svoj rang.'
+export const COMMUNITY_TRIES_TEXT = 'Šta su drugi probali danas'
+export const COMMUNITY_TRIES_HINT = '(osim rješenja)'
+export const COMMUNITY_LEGEND_YOU = 'Ti (sve igre)'
+export const COMMUNITY_LEGEND_TODAY = 'Danas (ti)'
+export const COMMUNITY_LEGEND_ALL = 'Svi danas'
+
 export const SETTINGS_TITLE = 'Postavke'
 export const DARK_MODE_TEXT = 'Tamni način'
 export const TIME_TRACKING_SETTING_TEXT = 'Mjerenje vremena'
