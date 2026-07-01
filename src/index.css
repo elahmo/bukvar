@@ -47,7 +47,8 @@
   text-shadow: 1px 1px 1px #000000;
 }
 
-/* World Cup easter egg: the draggable/kickable football (FootballOverlay). */
+/* Draggable/kickable toys (KickableEmoji): the World Cup football and the
+   July-1 birthday cake share this grab-cursor styling. */
 .football-ball {
   cursor: grab;
 }
