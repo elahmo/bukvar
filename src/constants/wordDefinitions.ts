@@ -51,7 +51,7 @@ export type WordDefinition = {
 export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
   // Today's word (Bukvar 913, the legacy list) — so the card shows on launch eve too.
   pumpa: {
-    def: 'Naprava za potiskivanje ili crpljenje tekućine, plina ili zraka.',
+    def: 'Naprava za potiskivanje ili crpljenje tekućine, gasa ili zraka.',
     pos: 'imenica, ž.',
   },
   nemar: {
@@ -71,7 +71,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, ž.',
   },
   čorba: {
-    def: 'Rijetka, vodenasta juha, najčešće mesna ili od povrća.',
+    def: 'Rijetka, vodenasta supa, najčešće mesna ili od povrća.',
     pos: 'imenica, ž.',
     note: 'turcizam',
   },
@@ -153,7 +153,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, ž.',
   },
   cijev: {
-    def: 'Šuplje, izduženo tijelo kroz koje protiče tekućina ili plin.',
+    def: 'Šuplje, izduženo tijelo kroz koje protiče tekućina ili gas.',
     pos: 'imenica, ž.',
   },
   bluza: {
@@ -198,7 +198,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, ž.',
   },
   dubak: {
-    def: 'Okvir na kotačićima u kojem dijete uči hodati; hodalica.',
+    def: 'Okvir na točkićima u kojem dijete uči hodati; hodalica.',
     pos: 'imenica, m.',
   },
   moler: {
@@ -227,7 +227,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, m.',
   },
   epoha: {
-    def: 'Duže povijesno razdoblje obilježeno zajedničkim osobinama.',
+    def: 'Duže historijsko razdoblje obilježeno zajedničkim osobinama.',
     pos: 'imenica, ž.',
   },
   ǆezva: {
@@ -327,7 +327,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, ž.',
   },
   argon: {
-    def: 'Plemeniti plin bez boje i mirisa, hemijski element (Ar).',
+    def: 'Plemeniti gas bez boje i mirisa, hemijski element (Ar).',
     pos: 'imenica, m.',
   },
   obrok: {
@@ -361,9 +361,9 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     def: 'Skupina ljudi okupljenih radi zajedničkog rada; glagolski oblik',
     pos: 'imenica, m.',
   },
-  nekad: { def: 'U prošlo vrijeme; nekoć.', note: 'prilog' },
+  nekad: { def: 'U prošlosti, u neko ranije vrijeme.', note: 'prilog' },
   sunce: {
-    def: 'Zvijezda oko koje kruži Zemlja; izvor svjetlosti i topline.',
+    def: 'Zvijezda oko koje kruži Zemlja; izvor svjetlosti i toplote.',
     pos: 'imenica, s.',
   },
   album: {
@@ -434,7 +434,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, m.',
   },
   mrena: {
-    def: 'Tanka opna u tijelu; zamućenje očne leće (katarakta).',
+    def: 'Tanka opna u tijelu; zamućenje očnog sočiva (katarakta).',
     pos: 'imenica, ž.',
   },
   tutaǌ: { def: 'Potmula, duboka tutnjava.', pos: 'imenica, m.' },
@@ -496,7 +496,7 @@ export const WORD_DEFINITIONS: Record<string, WordDefinition> = {
     pos: 'imenica, ž.',
   },
   kečap: {
-    def: 'Gusti, začinjeni umak od paradajza.',
+    def: 'Gusti, začinjeni sos od paradajza.',
     pos: 'imenica, m.',
     note: 'anglicizam',
   },
